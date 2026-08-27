@@ -1,15 +1,18 @@
-# PRD — Personal Portfolio Website "D.Nova"
+# PRD — Personal Portfolio Website (Rivael Hasiholan Manurung)
 
-**Versi:** 1.0
+**Versi:** 1.1
 **Tanggal:** 27 Agustus 2026
 **Owner:** info@kreasinusantara.id
-**Status:** Draft — siap untuk implementasi
+**Subjek:** Rivael Hasiholan Manurung — Web Developer
+**Status:** Fase 0–3 terimplementasi; §12 berisi catatan dari pengerjaan
+
+> **v1.1** — konten berpindah dari persona template "D.Nova" ke data asli dari portfolio v2 (§12.6), dan §12.7–12.9 mencatat tiga bug arsitektur yang ditemukan saat verifikasi visual.
 
 ---
 
 ## 1. Ringkasan Produk
 
-Website portfolio personal untuk seorang **Product/UIUX Designer** dengan positioning premium-editorial. Tujuannya bukan sekadar memajang karya, tapi **mengubah pengunjung menjadi booked call**. Setiap section punya satu tugas: membangun kredibilitas (angka, pengalaman), membuktikan kemampuan (karya), lalu menutup dengan CTA.
+Website portfolio personal untuk **Rivael Hasiholan Manurung — Web Developer**, memakai bahasa visual dari desain referensi (premium-editorial) tetapi dengan data asli, bukan persona template. Lihat §12.6. Tujuannya bukan sekadar memajang karya, tapi **mengubah pengunjung menjadi booked call**. Setiap section punya satu tugas: membangun kredibilitas (angka, pengalaman), membuktikan kemampuan (karya), lalu menutup dengan CTA.
 
 Gaya visual: **Swiss/editorial minimalis** — banyak white space, tipografi besar sebagai elemen utama, foto hitam-putih, aksen produk berwarna muted (beige, sage, lilac). Gerakan halus tapi terasa mahal.
 
@@ -25,9 +28,9 @@ Gaya visual: **Swiss/editorial minimalis** — banyak white space, tipografi bes
 
 ### 1.2 Target Pengguna
 
-1. **Founder startup / product manager** — cari designer untuk produk baru. Butuh bukti hasil (angka, klien, proses).
-2. **Agency / recruiter** — scanning cepat. Butuh CV visual, tech stack, pengalaman.
-3. **Sesama designer** — inspirasi & networking. Menilai kualitas eksekusi detail.
+1. **Recruiter / hiring manager** — scanning cepat. Butuh bukti kemampuan teknis: stack, kode nyata, pendidikan.
+2. **Founder / klien proyek** — cari developer untuk membangun produk. Butuh bukti proyek yang benar-benar jalan.
+3. **Sesama developer** — menilai kualitas kode dan eksekusi detail.
 
 ### 1.3 Non-Goals (v1)
 
@@ -46,20 +49,22 @@ Prinsip pemilihan: **modern, stabil, cepat di Vercel, tidak over-engineered.**
 
 | Layer | Pilihan | Alasan |
 |---|---|---|
-| Framework | **Next.js 15** (App Router, RSC) | Server Components = HTML kecil, streaming, `next/image` & `next/font` built-in |
-| Runtime UI | **React 19** | Actions, `useOptimistic`, ref-as-prop, siap React Compiler |
-| Bahasa | **TypeScript 5.7+** (`strict: true`) | Type-safety untuk konten & props animasi |
-| Styling | **Tailwind CSS v4** | Config CSS-first via `@theme`, engine Oxide, native cascade layers |
-| Package manager | **pnpm** | Disk-efficient, strict node_modules |
-| Lint & format | **Biome 2** | Satu tool, jauh lebih cepat dari ESLint+Prettier |
+| Framework | **Next.js 16.3** (App Router, RSC, Turbopack) | Server Components = HTML kecil, streaming, `next/image` & `next/font` built-in. Typed routes aktif secara default |
+| Runtime UI | **React 19.2** | Actions, `useOptimistic`, ref-as-prop, siap React Compiler |
+| Bahasa | **TypeScript 5.9** (`strict: true`) | Type-safety untuk konten & props animasi |
+| Styling | **Tailwind CSS v4.3** | Config CSS-first via `@theme`, engine Oxide, native cascade layers |
+| Package manager | **pnpm 10** | Disk-efficient, strict node_modules |
+| Lint & format | **Biome 2.5** | Satu tool, jauh lebih cepat dari ESLint+Prettier |
 | Deploy | **Vercel** | Edge network, ISR, Image Optimization, Analytics |
+
+> Versi di atas adalah yang **benar-benar terpasang** setelah scaffold. Next 16 (bukan 15) dan Motion 13 (bukan 12) adalah rilis stabil terbaru saat project dibuat; tidak ada perubahan API yang berdampak pada arsitektur di dokumen ini.
 
 ### 2.2 Animasi & Interaksi
 
 | Kebutuhan | Library | Catatan |
 |---|---|---|
-| Animasi komponen & scroll reveal | **Motion for React** (`motion` v12, penerus framer-motion) | `whileInView`, `useScroll`, `useTransform`, layout animation |
-| Smooth scroll | **Lenis** v1 | Inertia scroll — pondasi feel "mahal". Wajib disinkronkan dengan `useScroll` Motion |
+| Animasi komponen & scroll reveal | **Motion for React** (`motion` v13, penerus framer-motion) | `whileInView`, `useScroll`, `useTransform`, layout animation |
+| Smooth scroll | **Lenis** v1.3 (`lenis/react`) | Inertia scroll — pondasi feel "mahal". Wajib disinkronkan dengan `useScroll` Motion |
 | Timeline kompleks / pin | **GSAP 3 + ScrollTrigger** | **Hanya** untuk horizontal-pinned gallery. Jangan dipakai di tempat lain agar bundle ramping |
 | Split text | Custom hook `useSplitText` | Pecah heading jadi per-karakter/kata untuk stagger mask reveal. Tidak perlu plugin berbayar |
 | Marquee | CSS `@keyframes` + `translate3d` | Zero-JS, GPU-composited |
@@ -523,19 +528,136 @@ Ini requirement aksesibilitas, bukan opsional.
 
 ---
 
+## 12. Catatan Implementasi (diisi saat build berjalan)
+
+Keputusan yang muncul saat pengerjaan dan tidak terprediksi di draft awal. Bagian ini yang paling sering diabaikan tapi paling menyelamatkan orang berikutnya yang menyentuh kode ini.
+
+### 12.1 Reduced motion & hydration — jangan pakai `useReducedMotion()` Motion
+
+**Masalah:** `useReducedMotion()` bawaan Motion membaca singleton level-modul yang tidak pernah diinisialisasi saat SSR. Hasilnya server dan client bisa menjawab berbeda, dan **semua markup yang bercabang atas nilai itu akan hydration-mismatch.** Ini terkonfirmasi nyata: counter ter-render `200` di server dan `0` di client, `clip-path` hero berbeda di kedua sisi.
+
+**Solusi tiga lapis:**
+
+1. `MotionConfig reducedMotion="user"` di root (`SmoothScroll`) — menangani animasi transform sejak frame pertama, tanpa perlu percabangan apa pun di komponen.
+2. Hook sendiri `usePrefersReducedMotion()` (di atas `useMediaQuery`) untuk keputusan **struktural** yang tidak bisa dijangkau `MotionConfig` — apakah Lenis membajak scroll, apakah cursor dirender, apakah parallax aktif. Hook ini sengaja mengembalikan `false` di server **dan** di render client pertama, lalu berubah di effect. Kedua pass sepakat → hydration bersih.
+3. Untuk properti yang **bukan transform** (`clip-path`, `opacity`) `MotionConfig` tidak ikut campur — di sana durasinya yang dikecilkan jadi 0, bukan propertinya yang dihapus.
+
+**Aturan turunan:** jangan pernah menghapus prop `style` secara kondisional untuk menonaktifkan animasi. Kecilkan *range*-nya jadi nol (`[0, 120 * drift]`). Menghapus prop mengubah markup; mengecilkan range tidak.
+
+### 12.2 Lenis tidak di-unmount saat reduced motion
+
+Draft awal berencana tidak me-mount Lenis sama sekali. Itu berarti seluruh pohon anak akan remount begitu preferensi terbaca. Sebagai gantinya Lenis tetap mount tapi dinetralkan (`smoothWheel: false`, `lerp: 1`) — efektif jadi native scroll pass-through, tanpa remount.
+
+### 12.3 `useSortedClasses` Biome dimatikan
+
+Biome tidak bisa melihat utility Tailwind v4 yang kita definisikan sendiri lewat `@theme` dan `@utility` (`shell`, `text-label`, `text-display`, `h-curtain`, …). Sorting-nya berpotensi membalik kelas mana yang menang saat ada konflik. `cn()` + `tailwind-merge` sudah menyelesaikan konflik saat runtime, jadi rule ini rugi lebih besar dari untungnya.
+
+### 12.4 `biome.json` harus JSON murni
+
+Biome **mengabaikan seluruh config secara diam-diam** kalau file berisi komentar `//` — tanpa error, tapi `files.includes` tidak berlaku dan ia mulai men-scan `node_modules` serta `.next`. Gejalanya: jumlah file yang dicek melonjak dari 34 jadi 304. Simpan penjelasan di dokumen ini, bukan di config.
+
+### 12.5 Aset placeholder
+
+`HeroPortrait` saat ini adalah SVG bust abstrak dengan **footprint identik** dengan aset final, supaya komposisi hero sudah benar sebelum foto asli ada. Cara menukarnya (satu blok `<Image>`) tertulis di docstring komponen. Ini satu-satunya placeholder yang menghalangi hero terlihat final.
+
+### 12.6 Konten: identitas asli, bukan persona template
+
+Desain referensi memakai persona fiktif "D.Nova, design wizard". Situs ini memakai data asli dari portfolio v2: **Rivael Hasiholan Manurung, Web Developer** — 6 proyek nyata dengan screenshot dan repositori masing-masing, 25 teknologi, dan pendidikan D3 IT di Institut Teknologi Del.
+
+Dua konsekuensi yang sengaja diambil:
+
+- **Statistik hero tidak dikarang.** Referensi menampilkan "+200 Project completed / +50 Startup raised". Angka itu template. Yang dipakai `6 Projects shipped` dan `25+ Technologies used`, keduanya diturunkan langsung dari panjang array di `lib/site.ts` dan `lib/work.ts`. Menambah satu entri ke array skills otomatis menaikkan angkanya — itu disengaja, supaya angka tidak bisa berbohong.
+- **Kartu About bukan statistik "120% client engagement".** Tidak ada padanan nyata untuk itu, jadi kartunya mempertahankan bentuk visualnya tapi mengisi rekam pendidikan.
+- **Halaman case study tidak berisi narasi karangan.** Struktur "problem → process → solution" di §6 butuh ditulis manusia per proyek. Yang dirender hanya fakta yang tercatat (ringkasan, stack, klien, screenshot, repo) plus penanda eksplisit bahwa write-up-nya belum ada.
+
+### 12.7 Jangan tukar objek `variants` berdasarkan reduced motion
+
+**Ini bug aksesibilitas paling serius yang ditemukan sejauh ini.**
+
+Pendekatan awal: `variants = shouldReduce ? reducedFade : revealUp`. Karena `usePrefersReducedMotion()` baru bernilai benar setelah mount (§12.1), `initial` sudah terlanjur melukis state `hidden`. Saat objek variants ditukar, **properti apa pun yang ada di variant lama tapi tidak disebut di variant baru akan tetap menempel di nilai initial-nya selamanya.**
+
+Akibat nyatanya:
+- Reveal membeku di `y: 40` → label menumpuk judul di bawahnya.
+- Gambar bermask membeku di `clip-path: inset(0% 0% 100%)` → **hilang total, permanen.**
+
+Dan ini hanya menimpa pengguna yang mengaktifkan reduced motion — persis orang yang paling tidak boleh dirugikan.
+
+**Aturannya sekarang:** `variants` hanya berisi **state**, tidak pernah berisi `transition`. Objeknya konstan untuk semua pengguna. Reduced motion diekspresikan murni sebagai *timing* lewat `revealTransition()`, yang mengecilkan durasi per-properti (`y` dan `clipPath` jadi 0, `opacity` tetap 0.2s). Setiap properti tetap dianimasikan ke nilai `visible`-nya, jadi tidak ada yang bisa tertinggal di state initial.
+
+### 12.8 `viewport.margin` hanya boleh mengecilkan sisi bawah
+
+`margin: "-15% 0px"` terlihat wajar tapi salah: itu mengecilkan root box di **atas dan bawah**, menciptakan pita mati selebar 15% di puncak viewport tempat `whileInView` tidak pernah menyala. Header halaman duduk persis di situ — makin tinggi layar, makin parah. Di viewport 1500px, label section di `y: 160` tidak pernah muncul.
+
+Yang benar: `margin: "0px 0px -12% 0px"` — hanya sisi bawah, sehingga elemen menyala setelah masuk sedikit ke dalam layar, dan apa pun yang sudah berada di puncak halaman menyala seketika.
+
+### 12.9 Headless Chrome default-nya reduced motion
+
+`prefers-reduced-motion: reduce` bernilai **true** di headless Chrome secara default. Artinya setiap screenshot verifikasi diam-diam menguji jalur reduced — dan seluruh animasi yang sebenarnya tidak pernah terverifikasi, sampai hal ini ketahuan.
+
+Skrip screenshot sekarang wajib memanggil:
+
+```js
+await page.emulateMediaFeatures([
+  { name: "prefers-reduced-motion", value: "no-preference" },
+]);
+```
+
+Verifikasi visual apa pun setelah ini harus dijalankan di **kedua mode**. Ironisnya, justru default headless inilah yang menyingkap bug §12.7 — kalau tidak, ia akan lolos ke produksi dan hanya menimpa pengguna reduced motion.
+
+### 12.10 Semua konten hidup di satu file
+
+Seluruh konten situs ada di **`src/data/portfolio.json`** — identitas, navigasi, sosial, pendidikan, 4 pengalaman, 10 sertifikat, 5 grup teknologi, dan 9 proyek.
+
+`src/lib/{site,work,experience,skills}.ts` adalah **typed view** di atas file itu, bukan salinan. Masing-masing hanya meng-import JSON-nya, memberi tipe, lalu meng-export. Konsekuensinya:
+
+- Tidak ada komponen yang meng-import JSON mentah — semuanya lewat modul bertipe.
+- Tidak ada dua tempat yang bisa berbeda isi.
+- Menambah proyek atau teknologi cukup mengedit satu file; angka di hero ikut bergerak sendiri karena diturunkan dari `array.length`.
+
+Sumber migrasinya: `portofolio/src/data/user_info.js` (v1 — paling lengkap: pengalaman, sertifikat, deskripsi panjang) digabung dengan screenshot dari `v2/public/images`. Proyek yang di source-nya dikomentari (Uangku, DelApp, Blog, Library) sengaja tidak dibawa karena tidak punya bukti screenshot.
+
+### 12.11 Navigasi mengikuti isi, bukan desain referensi
+
+Nav referensi: About Me / Portfolio / **Services** / **Blog**. Dua yang terakhir dibuang. Tidak ada katalog layanan dan tidak ada arsip tulisan di baliknya, dan item nav yang membuka ruangan kosong merugikan kepercayaan lebih besar daripada nilai tambah entri itu.
+
+Nav sekarang: **About · Portfolio · Experience · Contact** — keempatnya punya isi nyata. Konsekuensi lanjutan: section blog di homepage (§4.8) digantikan section Stack, dan grid "Latest Works" (§4.7) dihapus karena marquee (§4.4) sudah menampilkan sembilan proyek yang sama — menampilkannya dua kali di satu halaman terbaca sebagai pengisi ruang.
+
+### 12.12 Status per fase
+
+| Fase | Status |
+|---|---|
+| 0. Setup (Next 16, Tailwind v4 token, Biome, font, UI primitives) | ✅ Selesai |
+| 1. Layout & Nav (nav condense/hide, overlay mobile, footer curtain, cursor, Lenis) | ✅ Selesai |
+| 2. Hero (split-text, clip-path reveal, counter, parallax) | ✅ Selesai |
+| 3. About + Marquee (SVG path animation, badge rotasi, marquee velocity-coupled + drag) | ✅ Selesai |
+| 4. Experience timeline (accordion) + CTA banner | ✅ Selesai |
+| 6. Halaman `/work`, `/work/[slug]`, `/about`, `/experience`, `/contact` | ✅ Selesai — narasi per case study menunggu ditulis |
+| — Konsolidasi konten ke `src/data/portfolio.json` | ✅ Selesai |
+| 5. Blog (MDX + Zod) | ⬜ Dibatalkan — tidak ada konten (§12.11) |
+| 7. Integrasi (Cal.com, contact form + Resend, analytics) | ⬜ Belum |
+| 8. Polish (a11y audit, Lighthouse, OG images, sitemap) | ⬜ Belum |
+
+**Verifikasi yang sudah dilakukan:** `pnpm build` lolos tanpa error TypeScript (14 halaman statis, 6 di antaranya case study ter-prerender), `pnpm lint` bersih, nol console error dan nol response ≥400 saat runtime. Dicek visual di 1440px dan 390px, termasuk state ter-scroll, overlay mobile, dan halaman detail — **di kedua mode `prefers-reduced-motion`** (lihat §12.9).
+
+**Yang belum terverifikasi:** perilaku nav hide-on-scroll-down (scroll programatik lewat Lenis settle-nya berbeda dari scroll wheel asli), dan drag pada marquee. Keduanya perlu dicek manual.
+
+---
+
 ## Lampiran A — Ringkasan Dependency
+
+Tanda ✅ = sudah terpasang di fase 0–2. Sisanya menyusul sesuai fasenya.
 
 ```jsonc
 {
   "dependencies": {
-    "next": "^15",
-    "react": "^19",
-    "react-dom": "^19",
-    "motion": "^12",
-    "lenis": "^1",
+    "next": "16.3.3",            // ✅
+    "react": "19.2.8",           // ✅
+    "react-dom": "19.2.8",       // ✅
+    "motion": "^13.1.1",         // ✅
+    "lenis": "^1.3.26",          // ✅
+    "clsx": "^2.1.1",            // ✅
+    "tailwind-merge": "^3.6.0",  // ✅
     "gsap": "^3",
-    "clsx": "^2",
-    "tailwind-merge": "^3",
     "zod": "^4",
     "react-hook-form": "^7",
     "@hookform/resolvers": "^5",
@@ -552,15 +674,17 @@ Ini requirement aksesibilitas, bukan opsional.
     "geist": "^1"
   },
   "devDependencies": {
-    "typescript": "^5.7",
-    "tailwindcss": "^4",
-    "@tailwindcss/postcss": "^4",
-    "@biomejs/biome": "^2",
-    "@next/bundle-analyzer": "^15",
+    "typescript": "^5.9",         // ✅
+    "tailwindcss": "^4.3",        // ✅
+    "@tailwindcss/postcss": "^4", // ✅
+    "@biomejs/biome": "^2.5.10",  // ✅
+    "@next/bundle-analyzer": "^16",
     "plaiceholder": "^3"
   }
 }
 ```
+
+**Font:** General Sans variable (`woff2`, 38 KB, weight 200–700) di-self-host dari Fontshare di `src/assets/fonts/`. Satu file menutup seluruh kebutuhan weight — dari "Hello" ultralight sampai UI 500.
 
 ---
 

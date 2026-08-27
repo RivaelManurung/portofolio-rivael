@@ -1,26 +1,178 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   DESIGN TOKENS — PRD §3
+   Tailwind v4 CSS-first config. Every token here becomes a
+   utility automatically (--color-ink → bg-ink / text-ink, etc).
+   ============================================================ */
+
+@theme {
+  /* --- Color (PRD §3.1) -------------------------------------
+     Palette is deliberately near-monochrome. Color enters the
+     page only through work photography, never through the UI. */
+  --color-ink: #0a0a0a;
+  --color-ink-muted: #6e6e6e;
+  --color-ink-faint: #a3a3a3;
+  --color-line: #e4e4e4;
+  --color-surface: #ffffff;
+  --color-canvas: #f2f2f0;
+  --color-canvas-alt: #ebebe8;
+  --color-focus: #2563eb;
+
+  /* --- Typography (PRD §3.2) ------------------------------- */
+  --font-display: var(--font-general-sans), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid scale — no breakpoint jumps. Larger size ⇒ tighter tracking. */
+  --text-display: clamp(5rem, 19vw, 17rem);
+  --text-display--line-height: 0.82;
+  --text-display--letter-spacing: -0.04em;
+
+  --text-h1: clamp(2.5rem, 5.5vw, 4.5rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.03em;
+
+  --text-h2: clamp(2rem, 4vw, 3.25rem);
+  --text-h2--line-height: 1.06;
+  --text-h2--letter-spacing: -0.025em;
+
+  --text-h3: clamp(1.25rem, 2vw, 1.75rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.02em;
+
+  --text-body: clamp(0.9375rem, 1vw, 1.0625rem);
+  --text-body--line-height: 1.6;
+
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.4;
+
+  /* --- Space & shape (PRD §3.3) ---------------------------- */
+  --spacing-section: clamp(5rem, 12vw, 11.25rem);
+  --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
+  /* Height of the fixed footer the page scrolls away to reveal (§4.9).
+     Tall enough for the reveal to register, short enough that the band
+     doesn't read as an empty room. */
+  --spacing-curtain: clamp(19rem, 34vh, 23rem);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* --- Motion (PRD §5.1) ----------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.83, 0, 0.17, 1);
+
+  /* --- Layout ---------------------------------------------- */
+  --container-shell: 1440px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================
+   BASE
+   ============================================================ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    /* Lenis drives smooth scroll; native smooth would fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Every section is full-bleed-capable; never scroll sideways. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Accessibility: never remove the focus ring without a replacement. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
+  }
+
+  /* Lenis: html gets `lenis` class; keep scrollbar behaviour sane. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+@utility shell {
+  /* The 1440px content shell (PRD §3.3). Marquee & CTA opt out. */
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-shell);
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility text-label {
+  /* Section eyebrow: • Portfolio (PRD §3.2) */
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-faint);
+}
+
+@utility mask-line {
+  /* Wrapper for per-line/char reveals. Extra padding keeps
+     ascenders and descenders from being clipped by the mask. */
+  display: block;
+  overflow: hidden;
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+/* ============================================================
+   REDUCED MOTION — PRD §5.6 (requirement, not a nicety)
+   JS disables Lenis / parallax / marquee separately; this is the
+   CSS-side backstop for anything declarative.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

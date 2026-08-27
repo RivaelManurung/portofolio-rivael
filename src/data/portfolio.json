@@ -1,0 +1,303 @@
+{
+  "_comment": "Single source of content for the whole site. Migrated from the v1 portfolio (src/data/user_info.js) and the v2 Next app. Edit here and nowhere else — src/lib/{site,work,experience,skills}.ts are typed views over this file, not separate copies. Counters in the hero derive from array lengths, so adding an entry moves the numbers.",
+
+  "site": {
+    "name": "Rivael Hasiholan Manurung",
+    "shortName": "Rivael",
+    "role": "Web Developer",
+    "year": "2026",
+    "email": "rivaelmanurung3@gmail.com",
+    "tagline": "It's Rivael, a web developer",
+    "description": "Fresh graduate in Information Technology with a strong passion for software development. Experienced in web and mobile application development using Node.js, PHP, JavaScript, Golang and Laravel. Skilled in SQL database management and API development, and familiar with front-end work in React. Strong in problem-solving and teamwork, with a focus on building efficient, scalable solutions.",
+    "bio": "As a back-end engineer I focus on the server-side of applications and on making sure they work well with the front end. I work across Node.js, PHP, Java and Golang, with a lot of time spent in Laravel, and I contribute across the whole development process rather than just my slice of it. Alongside the back end I build front-ends in React and manage SQL databases. I follow established practices to build systems that scale, keep databases clean and test thoroughly — the aim being a codebase where the front and back ends meet without friction.",
+    "url": "https://rivaelmanurung.dev",
+    "bookingUrl": "mailto:rivaelmanurung3@gmail.com",
+    "contactCopy": "Thank you for reaching out. If there's something specific you'd like to discuss, email me directly — I aim to reply within 24 hours, though it can take a little longer when things are busy. You're also welcome to connect on any of the links below."
+  },
+
+  "nav": [
+    { "label": "About", "href": "/about" },
+    { "label": "Portfolio", "href": "/work" },
+    { "label": "Experience", "href": "/experience" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+
+  "socials": [
+    { "label": "GitHub", "href": "https://github.com/RivaelManurung" },
+    { "label": "LinkedIn", "href": "https://linkedin.com/in/rivaelmanurung" },
+    { "label": "X", "href": "https://x.com/ManroeRivael" },
+    { "label": "Instagram", "href": "https://www.instagram.com/rivael_m" }
+  ],
+
+  "education": {
+    "school": "Institute of Technology Del",
+    "degree": "Associate Degree in Information Technology",
+    "period": "2022 — 2025",
+    "logo": "/images/del.png",
+    "logoWidth": 200,
+    "logoHeight": 200
+  },
+
+  "experience": [
+    {
+      "position": "Software Engineer",
+      "company": "Dinas Kominfo",
+      "period": "September 2024",
+      "logo": "/images/diskominfo.png",
+      "logoWidth": 190,
+      "logoHeight": 265,
+      "points": [
+        "Built an internal website using the Laravel framework.",
+        "Built the Kominfo attendance system using QR codes."
+      ],
+      "tags": ["Laravel", "QR Code"]
+    },
+    {
+      "position": "Web Developer",
+      "company": "Infinite Learning",
+      "period": "September 2024",
+      "logo": "/images/infinitelearning.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "points": [
+        "Designed website interfaces in Figma.",
+        "Built a website using React and Express.js."
+      ],
+      "tags": ["React", "Express", "Figma"]
+    },
+    {
+      "position": "Flutter Mobile App Development",
+      "company": "SanberCode",
+      "period": "July 2023",
+      "logo": "/images/sanbercode.jpeg",
+      "logoWidth": 288,
+      "logoHeight": 175,
+      "points": [
+        "Designed apps using Dart.",
+        "Built an application with the Flutter framework.",
+        "Used Firebase for authentication."
+      ],
+      "tags": ["Flutter", "Dart", "Firebase"]
+    },
+    {
+      "position": "Web Development",
+      "company": "Baparekraf Digital Talent",
+      "period": "May 2023 — July 2023",
+      "logo": "/images/baparekraf.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "points": ["Learned the Kotlin programming language."],
+      "tags": ["Kotlin"]
+    }
+  ],
+
+  "certificates": [
+    {
+      "title": "Memulai Pemrograman dengan Kotlin",
+      "issuer": "Dicoding",
+      "logo": "/images/dicoding.jpeg",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://www.dicoding.com/certificates/MEPJVODLQP3V"
+    },
+    {
+      "title": "Memulai Pemrograman Dengan C",
+      "issuer": "Dicoding",
+      "logo": "/images/dicoding.jpeg",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://www.dicoding.com/certificates/1OP80D6JVXQK"
+    },
+    {
+      "title": "Belajar Dasar Pemrograman JavaScript",
+      "issuer": "Dicoding",
+      "logo": "/images/dicoding.jpeg",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://www.dicoding.com/certificates/98XWV7J6WPM3"
+    },
+    {
+      "title": "Structured Query Language (SQL)",
+      "issuer": "Dicoding",
+      "logo": "/images/dicoding.jpeg",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://www.dicoding.com/certificates/JLX1W15WGP72"
+    },
+    {
+      "title": "Mahir Membuat DB Aplikasi Profesional",
+      "issuer": "Coding Studio",
+      "logo": "/images/codingstudio.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://codingstudio.id/certificate/75BB89ACA7-75BB4C2B51-75AF9E5EAA/"
+    },
+    {
+      "title": "Mahir Membuat Website dengan Laravel 9",
+      "issuer": "Coding Studio",
+      "logo": "/images/codingstudio.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://codingstudio.id/certificate/75BB89ACA7-75C105C831-75AF9E5EAA/"
+    },
+    {
+      "title": "Problem Solving (Basic)",
+      "issuer": "HackerRank",
+      "logo": "/images/hackerrank.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://www.hackerrank.com/certificates/c5883859b172"
+    },
+    {
+      "title": "Flutter Mobile App Development",
+      "issuer": "SanberCode",
+      "logo": "/images/sanbercode.jpeg",
+      "logoWidth": 288,
+      "logoHeight": 175,
+      "link": "https://sanbercode.com/sertifikat/generate/0188eb97-5d73-4ddb-af28-0f2a0688cde5"
+    },
+    {
+      "title": "UI/UX Design",
+      "issuer": "Rakamin",
+      "logo": "/images/rakamin.png",
+      "logoWidth": 154,
+      "logoHeight": 148,
+      "link": "https://drive.google.com/file/d/1uxIX2pssMJJLod3aSPqFwSEkjbd7VEWy/view"
+    },
+    {
+      "title": "HackFest 2024",
+      "issuer": "Google Developer Students Club",
+      "logo": "/images/gdsc.png",
+      "logoWidth": 225,
+      "logoHeight": 225,
+      "link": "https://drive.google.com/file/d/1_O_VI6osZkAIDhlRFYO44hTwd1Z4Kq1x/view?usp=sharing"
+    }
+  ],
+
+  "skillGroups": [
+    {
+      "label": "Languages",
+      "items": ["JavaScript", "PHP", "Go", "Dart", "Java", "Python", "C", "Kotlin"]
+    },
+    {
+      "label": "Frameworks",
+      "items": ["Laravel", "React", "Node.js", "Express", "Flutter", "Vue.js", "Gin", ".NET"]
+    },
+    {
+      "label": "Markup & styling",
+      "items": ["HTML", "CSS", "Tailwind", "Bootstrap", "Blade"]
+    },
+    {
+      "label": "Data",
+      "items": ["MySQL", "PostgreSQL", "MongoDB", "Redis", "Firebase", "GORM"]
+    },
+    {
+      "label": "Tools & platforms",
+      "items": ["Git", "GitHub", "GitLab", "Docker", "Postman", "Figma", "Vercel", "Laragon", "RabbitMQ", "JWT", "Midtrans"]
+    }
+  ],
+
+  "coreStack": ["Laravel", "Go", "Flutter", "React", "Node.js", "MySQL"],
+
+  "work": [
+    {
+      "slug": "charging-station",
+      "title": "Charging Station",
+      "client": "Campus project",
+      "summary": "A charging system for electric vehicle stations with digital payment built in. Drivers charge their car and settle securely online, which is what makes the stations practical to operate at scale.",
+      "stack": ["Laravel", "PHP", "Bootstrap", "Midtrans", "MySQL"],
+      "repo": "https://github.com/danielmanalu07/chargingstation",
+      "image": "/images/charging.png",
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "slug": "nusantara-oleh-oleh",
+      "title": "Nusantara Oleh-Oleh",
+      "client": "Project Menara",
+      "summary": "An e-commerce platform covering the whole of an online store — products, sales and customer interactions — on a Go service layer with Redis, PostgreSQL and RabbitMQ behind a Flutter app.",
+      "stack": ["Flutter", "Go", "Vue.js", "Redis", "PostgreSQL", "RabbitMQ"],
+      "repo": "https://github.com/Project-Menara/nusantara_mobile",
+      "image": "/images/nusantara.png",
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "slug": "inventory-tsth2",
+      "title": "Inventory Management TSTH2",
+      "client": "TSTH2",
+      "summary": "Warehouse inventory management covering item check-in and check-out, usage tracking and stock reporting — a Laravel 11 back end with a Flutter app handling QR code transactions on the floor.",
+      "stack": ["Laravel 11", "Blade", "Vue.js", "MySQL", "Flutter", "QR Code"],
+      "repo": "https://github.com/RivaelManurung/Website-dan-aplikasi-inventory-tsht2",
+      "image": "/images/TSTH2.png",
+      "width": 1970,
+      "height": 1710
+    },
+    {
+      "slug": "the-deck",
+      "title": "The Deck",
+      "client": "PA2 Kel 15",
+      "summary": "A multilingual food ordering system: Flutter on the front, Go on the back, and a Laravel admin panel for the restaurant staff who actually run it day to day.",
+      "stack": ["Flutter", "Dart", "Go", "Laravel", "PHP", "Bootstrap"],
+      "repo": "https://github.com/danielmanalu07/PA2-Kel15",
+      "image": "/images/Thedeckres.png",
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "slug": "agrilearn",
+      "title": "Agrilearn",
+      "client": "Massive Project",
+      "summary": "A full-stack educational platform for agriculture — forums, categorised articles and training videos supporting knowledge sharing between farming communities.",
+      "stack": ["Vite", "React", "Tailwind", "Node.js", "JavaScript"],
+      "repo": "https://github.com/RivaelManurung/massive",
+      "image": "/images/Agrilea.png",
+      "width": 1970,
+      "height": 1710
+    },
+    {
+      "slug": "absensi-kominfo",
+      "title": "Absensi Kominfo",
+      "client": "Dinas Kominfo",
+      "summary": "An employee attendance system built during the Kominfo placement: a structured way to record, track and manage absences so administrators keep accurate records without paper.",
+      "stack": ["Laravel", "PHP", "Bootstrap", "JavaScript"],
+      "repo": "https://github.com/danielmanalu07/Komfend-WEB-DEV",
+      "image": "/images/absensi.png",
+      "width": 1970,
+      "height": 1710
+    },
+    {
+      "slug": "sitani",
+      "title": "SiTani",
+      "client": "PA1 Kel 2",
+      "summary": "A platform for farmers to borrow agricultural equipment — requesting, borrowing and tracking tools on one side, inventory and transaction monitoring for administrators on the other.",
+      "stack": ["Laravel", "PHP", "JavaScript", "Bootstrap"],
+      "repo": "https://github.com/rickyananada1/PA1-Kel2",
+      "image": "/images/pa1.png",
+      "width": 1881,
+      "height": 922
+    },
+    {
+      "slug": "go-webservice",
+      "title": "Go-WebService",
+      "client": "Open source",
+      "summary": "A RESTful API applying Clean Architecture: JWT authentication, middleware-protected routes and full CRUD for products and categories, in a layered structure built to stay testable.",
+      "stack": ["Go", "Gin", "GORM", "PostgreSQL", "JWT", "Docker"],
+      "repo": "https://github.com/RivaelManurung/Go-WebService-CleanArchitecture",
+      "image": "/images/project1.png",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "slug": "tic-tac-toe",
+      "title": "Tic Tac Toe",
+      "client": "Side project",
+      "summary": "A two-player Tic Tac Toe built in Vue, with win detection, draw conditions and a reset. Small on purpose — a clean place to get state handling exactly right.",
+      "stack": ["Vue.js", "JavaScript", "HTML", "CSS"],
+      "repo": "https://github.com/RivaelManurung/tictactoe",
+      "image": "/images/tictactoe.png",
+      "width": 1919,
+      "height": 875
+    }
+  ]
+}
