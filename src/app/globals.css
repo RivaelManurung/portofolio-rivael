@@ -53,7 +53,7 @@
   /* Height of the fixed footer the page scrolls away to reveal (§4.9).
      Tall enough for the reveal to register, short enough that the band
      doesn't read as an empty room. */
-  --spacing-curtain: clamp(19rem, 34vh, 23rem);
+  --spacing-curtain: clamp(14rem, 24vh, 17rem);
 
   --radius-sm: 8px;
   --radius-md: 12px;

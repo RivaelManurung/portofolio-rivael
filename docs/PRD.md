@@ -622,7 +622,27 @@ Nav referensi: About Me / Portfolio / **Services** / **Blog**. Dua yang terakhir
 
 Nav sekarang: **About · Portfolio · Experience · Contact** — keempatnya punya isi nyata. Konsekuensi lanjutan: section blog di homepage (§4.8) digantikan section Stack, dan grid "Latest Works" (§4.7) dihapus karena marquee (§4.4) sudah menampilkan sembilan proyek yang sama — menampilkannya dua kali di satu halaman terbaca sebagai pengisi ruang.
 
-### 12.12 Status per fase
+### 12.12 Arsitektur: satu halaman + dua pengecualian
+
+Rencana awal §6 memecah situs jadi banyak route (`/about`, `/services`, `/blog`, dst). Itu dibatalkan. Sekarang:
+
+- **`/`** — satu halaman berisi seluruh section: Hero, About (`#about`), Portfolio (`#work`), Experience (`#experience`), Stack (`#skills`), Contact (`#contact`). Nav tidak berpindah halaman, ia scroll.
+- **`/work`** — daftar lengkap proyek dengan ringkasan dan stack per entri. Tetap terpisah karena marquee di homepage bagus untuk sekilas, buruk untuk menilai.
+- **`/work/[slug]`** — 9 case study, ter-prerender statis.
+
+**Anchor diserahkan ke Lenis, bukan ke browser.** Klik nav di homepage di-`preventDefault` lalu `lenis.scrollTo(target, { offset: -96 })` — supaya perpindahannya ikut easing yang sama dengan seluruh gerakan di halaman, bukan teleportasi. Offset 96px itu clearance untuk nav yang `fixed`. Di halaman lain handler-nya melepas event, jadi link `/#about` merutekan balik ke `/` dulu — itu sebabnya href-nya memakai garis miring di depan.
+
+**Active state lewat IntersectionObserver** dengan `rootMargin: "-45% 0px -45% 0px"`. Margin simetris itu mengecilkan root jadi pita tipis di tengah layar sehingga persis satu section bisa menempatinya. Perhatikan kontrasnya dengan §12.8: di sana mengecilkan sisi atas adalah bug, di sini justru inti mekanismenya.
+
+**Footer diramping­kan.** Sebelumnya ia mengulang email besar dan 4 link sosial — persis yang sudah ada di banner penutup tepat di atasnya. Dua blok gelap berisi empat link yang sama, berurutan. Footer sekarang cuma nav + copyright.
+
+### 12.13 Angka boleh diturunkan, prosa jangan menghitung
+
+Paragraf di `/work` sempat berbunyi *"9 projects across web and mobile — electric-vehicle charging, multilingual food ordering, …"*. Angkanya aman (diturunkan dari `work.length`), tapi **enumerasinya tidak**: begitu proyek kesepuluh masuk, kalimat itu jadi salah tanpa ada yang menyadarinya.
+
+Aturannya: angka boleh muncul di UI selama diturunkan dari data (counter hero, `{certificates.length}`). Daftar isi yang ditulis tangan di dalam prosa tidak boleh, karena tidak ada mekanisme yang memaksanya ikut berubah.
+
+### 12.14 Status per fase
 
 | Fase | Status |
 |---|---|
@@ -631,9 +651,11 @@ Nav sekarang: **About · Portfolio · Experience · Contact** — keempatnya pun
 | 2. Hero (split-text, clip-path reveal, counter, parallax) | ✅ Selesai |
 | 3. About + Marquee (SVG path animation, badge rotasi, marquee velocity-coupled + drag) | ✅ Selesai |
 | 4. Experience timeline (accordion) + CTA banner | ✅ Selesai |
-| 6. Halaman `/work`, `/work/[slug]`, `/about`, `/experience`, `/contact` | ✅ Selesai — narasi per case study menunggu ditulis |
+| 6. `/work` + 9 case study `/work/[slug]` | ✅ Selesai — narasi per case study menunggu ditulis |
 | — Konsolidasi konten ke `src/data/portfolio.json` | ✅ Selesai |
+| — Arsitektur satu halaman + anchor scroll (§12.12) | ✅ Selesai |
 | 5. Blog (MDX + Zod) | ⬜ Dibatalkan — tidak ada konten (§12.11) |
+| 6. `/about`, `/experience`, `/contact` sebagai route | ⬜ Dibatalkan — jadi section di `/` (§12.12) |
 | 7. Integrasi (Cal.com, contact form + Resend, analytics) | ⬜ Belum |
 | 8. Polish (a11y audit, Lighthouse, OG images, sitemap) | ⬜ Belum |
 

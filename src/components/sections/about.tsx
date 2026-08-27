@@ -40,9 +40,7 @@ export function About() {
           </Reveal>
 
           <Reveal index={1}>
-            <p className="mt-6 max-w-[46ch] text-ink-muted">
-              {site.description}
-            </p>
+            <p className="mt-6 max-w-[46ch] text-ink-muted">{site.bio}</p>
           </Reveal>
 
           {/* Points at the card. Hidden on stacked layouts, where it

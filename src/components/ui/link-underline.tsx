@@ -8,6 +8,8 @@ type LinkUnderlineProps = {
   children: ReactNode;
   /** Show the trailing ↗ that marks an action link. */
   arrow?: boolean;
+  /** Lets the nav intercept same-page anchors and hand them to Lenis. */
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   className?: string;
 };
 
@@ -23,6 +25,7 @@ export function LinkUnderline({
   href,
   children,
   arrow = true,
+  onClick,
   className,
 }: LinkUnderlineProps) {
   const isExternal = href.startsWith("http") || href.startsWith("mailto:");
@@ -58,6 +61,7 @@ export function LinkUnderline({
       <a
         className={classes}
         href={href}
+        onClick={onClick}
         rel="noreferrer noopener"
         target="_blank"
       >
@@ -67,7 +71,7 @@ export function LinkUnderline({
   }
 
   return (
-    <Link className={classes} href={href}>
+    <Link className={classes} href={href} onClick={onClick}>
       {content}
     </Link>
   );

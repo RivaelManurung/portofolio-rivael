@@ -10,18 +10,26 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ArrowUpRight } from "@/components/ui/arrow";
+import { LinkUnderline } from "@/components/ui/link-underline";
+import { Logo } from "@/components/ui/logo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { ease, spring } from "@/lib/motion";
 import { navLinks, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight } from "../ui/arrow";
-import { LinkUnderline } from "../ui/link-underline";
-import { Logo } from "../ui/logo";
 
 /** Scroll depth at which the bar condenses into a floating pill. */
 const CONDENSE_AT = 80;
 /** Below this depth we never hide — avoids flicker at the top of the page. */
 const HIDE_AFTER = 240;
+/** Clearance for the fixed bar when jumping to an anchor. */
+const ANCHOR_OFFSET = -96;
+
+/** "/#about" → "about". Returns null for ordinary routes. */
+function sectionId(href: string): string | null {
+  const [, id] = href.split("#");
+  return id ?? null;
+}
 
 export function Nav() {
   const pathname = usePathname();
@@ -32,6 +40,9 @@ export function Nav() {
   const [condensed, setCondensed] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const isHome = pathname === "/";
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -44,6 +55,44 @@ export function Nav() {
   // value the effect reads — which is exactly what the lint rule flags.
   // biome-ignore lint/correctness/useExhaustiveDependencies: navigation is the signal
   useEffect(() => setMenuOpen(false), [pathname]);
+
+  /**
+   * Track which section owns the middle of the viewport, so the nav
+   * underline follows the reader down a single-page layout.
+   *
+   * The symmetric -45% margin collapses the root box to a thin band
+   * across the centre of the screen: exactly one section can occupy it,
+   * which is what makes the active state unambiguous. (Contrast with the
+   * reveal viewport in lib/motion.ts, where shrinking the top edge is a
+   * bug — here it's the entire point.)
+   */
+  useEffect(() => {
+    if (!isHome) {
+      setActiveId(null);
+      return;
+    }
+
+    const targets = navLinks
+      .map((link) => sectionId(link.href))
+      .filter((id): id is string => Boolean(id))
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (targets.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const inBand = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (inBand[0]) setActiveId(inBand[0].target.id);
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+
+    for (const target of targets) observer.observe(target);
+    return () => observer.disconnect();
+  }, [isHome]);
 
   // Lock scroll behind the mobile overlay. Lenis owns the scroll
   // position, so stopping it is the real lock; the body `overflow` is a
@@ -70,6 +119,40 @@ export function Nav() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
+
+  /**
+   * On the homepage an anchor is a scroll, not a navigation — hand it to
+   * Lenis so it eases like every other movement on the page instead of
+   * teleporting. Anywhere else the link is left alone to route back to
+   * `/` first, which is why the hrefs carry the leading slash.
+   */
+  function handleAnchor(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) {
+    const id = sectionId(href);
+    if (!id || !isHome) return;
+
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    event.preventDefault();
+    setMenuOpen(false);
+    // The overlay's effect restarts Lenis, but not until after this
+    // handler returns — start it here or the scroll is swallowed.
+    lenis?.start();
+
+    if (lenis) {
+      lenis.scrollTo(target, { offset: ANCHOR_OFFSET });
+    } else {
+      target.scrollIntoView({
+        behavior: shouldReduce ? "auto" : "smooth",
+        block: "start",
+      });
+    }
+
+    window.history.replaceState(null, "", href);
+  }
 
   return (
     <>
@@ -114,7 +197,7 @@ export function Nav() {
               {/* Desktop links */}
               <ul className="hidden items-center gap-7 md:flex">
                 {navLinks.map((link) => {
-                  const active = pathname.startsWith(link.href);
+                  const active = sectionId(link.href) === activeId;
                   return (
                     <li key={link.href}>
                       <Link
@@ -123,6 +206,7 @@ export function Nav() {
                           active ? "text-ink" : "text-ink-muted hover:text-ink",
                         )}
                         href={link.href}
+                        onClick={(event) => handleAnchor(event, link.href)}
                       >
                         {link.label}
                         {/* Shared layout underline slides between items. */}
@@ -141,11 +225,16 @@ export function Nav() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* "Book A Call" in the reference presupposes a booking
+                  calendar. There isn't one, and inventing a scheduling
+                  flow that lands in an inbox is worse than naming the
+                  thing plainly. */}
               <LinkUnderline
                 className="hidden text-[0.9375rem] sm:inline-flex"
-                href={site.bookingUrl}
+                href={site.ctaHref}
+                onClick={(event) => handleAnchor(event, site.ctaHref)}
               >
-                Book A Call
+                {site.ctaLabel}
               </LinkUnderline>
 
               <button
@@ -161,10 +250,7 @@ export function Nav() {
               >
                 <span className="relative block h-3 w-4">
                   <motion.span
-                    animate={{
-                      rotate: menuOpen ? 45 : 0,
-                      y: menuOpen ? 5 : 0,
-                    }}
+                    animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 5 : 0 }}
                     className="absolute inset-x-0 top-0 h-px bg-current"
                     transition={{ duration: 0.3, ease: ease.inOut }}
                   />
@@ -209,7 +295,7 @@ export function Nav() {
                     <Link
                       className="block py-2 font-display text-h2 font-light"
                       href={link.href}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={(event) => handleAnchor(event, link.href)}
                     >
                       {link.label}
                     </Link>
@@ -218,18 +304,20 @@ export function Nav() {
               ))}
             </ul>
 
-            <motion.a
+            <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 text-h3"
-              href={site.bookingUrl}
               initial={{ opacity: 0, y: 20 }}
-              rel="noreferrer noopener"
-              target="_blank"
               transition={{ duration: 0.5, ease: ease.out, delay: 0.5 }}
             >
-              Book A Call
-              <ArrowUpRight className="size-[0.8em]" />
-            </motion.a>
+              <Link
+                className="inline-flex items-center gap-2 text-h3"
+                href={site.ctaHref}
+                onClick={(event) => handleAnchor(event, site.ctaHref)}
+              >
+                {site.ctaLabel}
+                <ArrowUpRight className="size-[0.8em]" />
+              </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

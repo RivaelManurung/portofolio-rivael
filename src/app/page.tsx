@@ -1,44 +1,36 @@
-import { Reveal } from "@/components/motion/reveal";
 import { About } from "@/components/sections/about";
-import { CtaBanner } from "@/components/sections/cta-banner";
+import { ConnectBanner } from "@/components/sections/connect-banner";
 import { ExperienceSection } from "@/components/sections/experience-section";
-import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { SkillsSection } from "@/components/sections/skills-section";
-import { WorkMarquee } from "@/components/sections/work-marquee";
-import { LinkUnderline } from "@/components/ui/link-underline";
+import { WorkSection } from "@/components/sections/work-section";
 
 /**
- * Homepage — PRD §4.
+ * Single-page homepage. Every section the nav points at lives here and
+ * is reached by anchor, not by navigation — `/work` and the case studies
+ * are the only separate pages, because those are where a reader goes
+ * once they've decided to dig in.
  *
- * One deviation from the reference: it carries both a scrolling work
- * strip (§4.4) and a "Latest Works" grid (§4.7). With nine real projects
- * that means showing the same set twice on one page, which reads as
- * padding. The marquee stays, the grid gives way to `/work`, and the
- * blog strip (§4.8) gives way to the stack — there is no written
- * archive to put there.
+ * Deviations from the reference design, all for the same reason — it is
+ * a template for an agency selling design work, and this is a graduate
+ * showing what he has built:
+ *
+ *   §4.7 "Latest Works" grid — the marquee plus `/work` already covers
+ *        it; a third view of the same nine projects is padding.
+ *   §4.8 blog strip — replaced by the stack. There is no written
+ *        archive, and the stack is what a reader scans for here.
+ *   §4.6 + §4.9 — merged into one closing band. Two contact sections
+ *        plus a footer listing the same links is three closings.
  */
 export default function HomePage() {
   return (
     <>
       <Hero />
       <About />
-
-      <WorkMarquee />
-
-      <Reveal className="shell mt-6 flex justify-center" index={0}>
-        <span className="inline-flex items-center gap-3 text-ink-muted">
-          Check out more
-          <LinkUnderline arrow={false} className="text-ink" href="/work">
-            View all projects
-          </LinkUnderline>
-        </span>
-      </Reveal>
-
+      <WorkSection />
       <ExperienceSection />
-      <CtaBanner />
       <SkillsSection />
-      <FinalCta />
+      <ConnectBanner />
     </>
   );
 }

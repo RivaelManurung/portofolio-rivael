@@ -70,8 +70,12 @@ export default async function WorkDetailPage({
           {item.title}
         </SplitText>
 
-        <Reveal className="mt-6" index={2}>
+        <Reveal className="mt-6 flex items-center gap-5" index={2}>
           <span className="text-label">For {item.client}</span>
+          <span aria-hidden className="h-px w-8 bg-line" />
+          <LinkUnderline arrow={false} href="/work">
+            All projects
+          </LinkUnderline>
         </Reveal>
       </header>
 
