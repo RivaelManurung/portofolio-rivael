@@ -23,7 +23,7 @@ export function HeroPortrait({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "size-full overflow-hidden rounded-tl-lg bg-ink",
+        "size-full overflow-hidden rounded-tl-lg bg-contrast",
         className,
       )}
     >

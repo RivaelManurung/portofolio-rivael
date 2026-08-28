@@ -5,13 +5,9 @@ import { ParallaxImage } from "@/components/motion/parallax-image";
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowCircle } from "@/components/ui/arrow-circle";
 import { Pill } from "@/components/ui/pill";
-import { education } from "@/lib/experience";
-import { coreStack, site } from "@/lib/site";
-
-const points = [
-  "I work across the whole stack — Laravel and Go on the back end, React and Flutter on the front — rather than handing off at the API boundary.",
-  "Most of what I've shipped runs for someone: campus operations, a government office, a warehouse floor. That constraint shapes how I build.",
-];
+import { getEducation } from "@/lib/experience";
+import type { Dictionary, Locale } from "@/lib/i18n";
+import { coreStack, getSite, site } from "@/lib/site";
 
 /**
  * About — PRD §4.3.
@@ -29,18 +25,24 @@ const points = [
  * here. The card keeps its shape but carries the education record
  * instead — the strongest true proof point available.
  */
-export function About() {
+export function About({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const copy = getSite(locale);
+  const education = getEducation(locale);
+  const points = [dict.about.pointOne, dict.about.pointTwo];
+
   return (
     <section className="shell py-section" id="about">
       <div className="grid gap-x-10 gap-y-14 lg:grid-cols-12">
         {/* Left — introduction */}
         <div className="lg:col-span-4">
           <Reveal>
-            <h2 className="font-display text-h2 font-light">About Me</h2>
+            <h2 className="font-display font-light text-h2">
+              {dict.about.title}
+            </h2>
           </Reveal>
 
           <Reveal index={1}>
-            <p className="mt-6 max-w-[46ch] text-ink-muted">{site.bio}</p>
+            <p className="mt-6 max-w-[46ch] text-ink-muted">{copy.bio}</p>
           </Reveal>
 
           {/* Points at the card. Hidden on stacked layouts, where it
@@ -68,11 +70,11 @@ export function About() {
               />
             </div>
 
-            <p className="mt-6 font-display text-h1 font-light leading-none">
+            <p className="mt-6 font-display font-light text-h1 leading-none">
               2025
             </p>
 
-            <p className="mt-3 max-w-[34ch] text-meta text-ink-muted">
+            <p className="mt-3 max-w-[34ch] text-ink-muted text-meta">
               {education.degree}, {education.school} · {education.period}
             </p>
 
@@ -104,7 +106,7 @@ export function About() {
 
           <Reveal index={3}>
             <div className="mt-12 border-line border-t pt-6">
-              <span className="text-label">Most days</span>
+              <span className="text-label">{dict.about.mostDays}</span>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {coreStack.map((skill) => (
                   <li key={skill}>

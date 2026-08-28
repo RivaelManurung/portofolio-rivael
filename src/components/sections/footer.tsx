@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
-import { footerLinks, site } from "@/lib/site";
+import type { Locale } from "@/lib/i18n";
+import { type NavLink, site } from "@/lib/site";
 
 /**
  * Footer — PRD §4.9.
@@ -19,16 +20,28 @@ import { footerLinks, site } from "@/lib/site";
  * twice in a row. Everything off the homepage still reaches contact
  * through the nav.
  */
-export function Footer() {
+export function Footer({
+  locale,
+  links,
+  homeLabel,
+  builtWith,
+}: {
+  locale: Locale;
+  links: NavLink[];
+  homeLabel: string;
+  builtWith: string;
+}) {
+  const all: NavLink[] = [{ label: homeLabel, href: `/${locale}` }, ...links];
+
   return (
-    <footer className="fixed inset-x-0 bottom-0 z-0 flex h-curtain flex-col justify-end bg-ink px-[var(--spacing-gutter)] pb-8 text-canvas">
+    <footer className="fixed inset-x-0 bottom-0 z-0 flex h-curtain flex-col justify-end bg-contrast px-[var(--spacing-gutter)] pb-8 text-on-contrast">
       <div className="mx-auto w-full max-w-shell">
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-8 gap-y-3">
-            {footerLinks.map((link) => (
+            {all.map((link) => (
               <li key={link.href}>
                 <Link
-                  className="font-display font-light text-canvas/60 text-h3 transition-colors duration-300 hover:text-canvas"
+                  className="font-display font-light text-h3 text-on-contrast/60 transition-colors duration-300 hover:text-on-contrast"
                   href={link.href}
                 >
                   {link.label}
@@ -38,11 +51,11 @@ export function Footer() {
           </ul>
         </nav>
 
-        <div className="mt-10 flex flex-col gap-3 border-canvas/15 border-t pt-6 text-canvas/45 text-meta sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-on-contrast/15 border-t pt-6 text-meta text-on-contrast/45 sm:flex-row sm:items-center sm:justify-between">
           <span className="inline-flex items-center gap-2">
             <Logo className="size-4" />© {new Date().getFullYear()} {site.name}
           </span>
-          <span>Built with Next.js</span>
+          <span>{builtWith}</span>
         </div>
       </div>
     </footer>

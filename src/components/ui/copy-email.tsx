@@ -12,7 +12,15 @@ import { ease } from "@/lib/motion";
  * selectable text either way, and the confirmation is announced politely
  * so it isn't only a visual signal.
  */
-export function CopyEmail({ email }: { email: string }) {
+export function CopyEmail({
+  email,
+  copiedLabel,
+  announceLabel,
+}: {
+  email: string;
+  copiedLabel: string;
+  announceLabel: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -51,19 +59,19 @@ export function CopyEmail({ email }: { email: string }) {
       </button>
 
       <span aria-live="polite" className="sr-only">
-        {copied ? "Email address copied to clipboard" : ""}
+        {copied ? announceLabel : ""}
       </span>
 
       <AnimatePresence>
         {copied && (
           <motion.span
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-full bg-canvas px-3 py-1 text-meta text-ink"
+            className="rounded-full bg-on-contrast px-3 py-1 text-contrast text-meta"
             exit={{ opacity: 0, y: -6 }}
             initial={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.25, ease: ease.out }}
           >
-            Copied!
+            {copiedLabel}
           </motion.span>
         )}
       </AnimatePresence>

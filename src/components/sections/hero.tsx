@@ -7,7 +7,6 @@ import { SplitText } from "@/components/motion/split-text";
 import { ArrowDown } from "@/components/ui/arrow";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { duration, ease } from "@/lib/motion";
-import { heroStats, site } from "@/lib/site";
 import { HeroPortrait } from "./hero-portrait";
 
 /**
@@ -24,7 +23,26 @@ import { HeroPortrait } from "./hero-portrait";
  * moves before the type does (PRD §5.3, rule 2). It earns the exception
  * because the composition, not the word, is the first impression.
  */
-export function Hero() {
+type Stat = {
+  value: number;
+  prefix: string;
+  suffix: string;
+  label: string;
+};
+
+export function Hero({
+  role,
+  year,
+  tagline,
+  scrollLabel,
+  stats,
+}: {
+  role: string;
+  year: string;
+  tagline: string;
+  scrollLabel: string;
+  stats: readonly Stat[];
+}) {
   const ref = useRef<HTMLElement>(null);
   const shouldReduce = usePrefersReducedMotion();
 
@@ -62,7 +80,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           transition={{ duration: duration.base, delay: 0.9 }}
         >
-          {site.role}
+          {role}
         </motion.span>
         <motion.span
           animate={{ opacity: 1 }}
@@ -70,7 +88,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           transition={{ duration: duration.base, delay: 1 }}
         >
-          {site.year}
+          {year}
         </motion.span>
       </div>
 
@@ -100,7 +118,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           transition={{ duration: duration.base, ease: ease.out, delay: 0.6 }}
         >
-          {heroStats.map((stat) => (
+          {stats.map((stat) => (
             <div key={stat.label}>
               <dt className="sr-only">{stat.label}</dt>
               <dd>
@@ -144,7 +162,7 @@ export function Hero() {
             transition={{ duration: duration.base, ease: ease.out, delay: 0.7 }}
           >
             <span aria-hidden className="h-px w-8 bg-ink-faint" />
-            {site.tagline}
+            {tagline}
           </motion.p>
         </motion.div>
 
@@ -155,7 +173,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           transition={{ duration: duration.base, delay: 1 }}
         >
-          Scroll down
+          {scrollLabel}
           {/* Idle bob. MotionConfig stops this for reduced-motion users:
               it's a transform, which is exactly what that setting drops. */}
           <motion.span

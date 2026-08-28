@@ -11,11 +11,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "@/components/ui/arrow";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { LinkUnderline } from "@/components/ui/link-underline";
 import { Logo } from "@/components/ui/logo";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import type { Locale } from "@/lib/i18n";
 import { ease, spring } from "@/lib/motion";
-import { navLinks, site } from "@/lib/site";
+import type { NavLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /** Scroll depth at which the bar condenses into a floating pill. */
@@ -25,13 +28,38 @@ const HIDE_AFTER = 240;
 /** Clearance for the fixed bar when jumping to an anchor. */
 const ANCHOR_OFFSET = -96;
 
-/** "/#about" → "about". Returns null for ordinary routes. */
+/** "/en#about" → "about". Returns null for ordinary routes. */
 function sectionId(href: string): string | null {
   const [, id] = href.split("#");
   return id ?? null;
 }
 
-export function Nav() {
+type NavLabels = {
+  home: string;
+  openMenu: string;
+  closeMenu: string;
+  toTheme: string;
+  toLanguage: string;
+};
+
+/**
+ * Content arrives as props rather than being read from `lib/site` here:
+ * this is a client component, and importing the content module would
+ * ship the whole bilingual dataset to the browser for five link labels.
+ */
+export function Nav({
+  locale,
+  links,
+  cta,
+  labels,
+  siteName,
+}: {
+  locale: Locale;
+  links: NavLink[];
+  cta: { label: string; href: string };
+  labels: NavLabels;
+  siteName: string;
+}) {
   const pathname = usePathname();
   const shouldReduce = usePrefersReducedMotion();
   const lenis = useLenis();
@@ -42,7 +70,8 @@ export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const isHome = pathname === "/";
+  const homeHref = `/${locale}`;
+  const isHome = pathname === homeHref;
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -72,7 +101,7 @@ export function Nav() {
       return;
     }
 
-    const targets = navLinks
+    const targets = links
       .map((link) => sectionId(link.href))
       .filter((id): id is string => Boolean(id))
       .map((id) => document.getElementById(id))
@@ -92,7 +121,7 @@ export function Nav() {
 
     for (const target of targets) observer.observe(target);
     return () => observer.disconnect();
-  }, [isHome]);
+  }, [isHome, links]);
 
   // Lock scroll behind the mobile overlay. Lenis owns the scroll
   // position, so stopping it is the real lock; the body `overflow` is a
@@ -124,7 +153,7 @@ export function Nav() {
    * On the homepage an anchor is a scroll, not a navigation — hand it to
    * Lenis so it eases like every other movement on the page instead of
    * teleporting. Anywhere else the link is left alone to route back to
-   * `/` first, which is why the hrefs carry the leading slash.
+   * the homepage first, which is why the hrefs carry the locale prefix.
    */
   function handleAnchor(
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -165,11 +194,11 @@ export function Nav() {
         <div className="shell">
           <motion.nav
             animate={{
-              maxWidth: condensed ? 980 : 1440,
+              maxWidth: condensed ? 1040 : 1440,
               paddingLeft: condensed ? 20 : 4,
-              paddingRight: condensed ? 20 : 4,
-              paddingTop: condensed ? 10 : 4,
-              paddingBottom: condensed ? 10 : 4,
+              paddingRight: condensed ? 12 : 4,
+              paddingTop: condensed ? 8 : 4,
+              paddingBottom: condensed ? 8 : 4,
             }}
             className={cn(
               "mx-auto flex items-center justify-between gap-6 rounded-full transition-colors duration-500",
@@ -177,26 +206,25 @@ export function Nav() {
                 ? "border border-line/80 bg-canvas/75 backdrop-blur-xl"
                 : "border border-transparent bg-transparent",
               // The bar stays above the overlay, so on a dark backdrop it
-              // has to flip to light or the mark and the toggle vanish.
-              menuOpen && "text-canvas",
+              // has to flip or the mark and the toggle vanish.
+              menuOpen && "text-on-contrast",
             )}
             initial={false}
             transition={{ duration: 0.5, ease: ease.out }}
           >
-            {/* Mark and links read as one left-hand cluster; the CTA is
-                the only thing pushed to the far right. */}
+            {/* Mark and links read as one left-hand cluster; the controls
+                are the only things pushed to the far right. */}
             <div className="flex items-center gap-8">
               <Link
-                aria-label={`${site.name} — home`}
+                aria-label={`${siteName} — ${labels.home}`}
                 className="flex items-center gap-2 pl-1"
-                href="/"
+                href={homeHref}
               >
                 <Logo className="size-6" />
               </Link>
 
-              {/* Desktop links */}
               <ul className="hidden items-center gap-7 md:flex">
-                {navLinks.map((link) => {
+                {links.map((link) => {
                   const active = sectionId(link.href) === activeId;
                   return (
                     <li key={link.href}>
@@ -224,26 +252,40 @@ export function Nav() {
               </ul>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* "Book A Call" in the reference presupposes a booking
                   calendar. There isn't one, and inventing a scheduling
                   flow that lands in an inbox is worse than naming the
                   thing plainly. */}
               <LinkUnderline
-                className="hidden text-[0.9375rem] sm:inline-flex"
-                href={site.ctaHref}
-                onClick={(event) => handleAnchor(event, site.ctaHref)}
+                className="mr-1 hidden text-[0.9375rem] lg:inline-flex"
+                href={cta.href}
+                onClick={(event) => handleAnchor(event, cta.href)}
               >
-                {site.ctaLabel}
+                {cta.label}
               </LinkUnderline>
+
+              <LanguageSwitcher
+                className={cn(
+                  "hidden sm:flex",
+                  menuOpen && "border-on-contrast/30",
+                )}
+                label={labels.toLanguage}
+                locale={locale}
+              />
+
+              <ThemeToggle
+                className={cn(menuOpen && "border-on-contrast/30")}
+                label={labels.toTheme}
+              />
 
               <button
                 aria-controls="mobile-menu"
                 aria-expanded={menuOpen}
-                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-label={menuOpen ? labels.closeMenu : labels.openMenu}
                 className={cn(
-                  "grid size-10 place-items-center rounded-full border transition-colors duration-500 md:hidden",
-                  menuOpen ? "border-canvas/30" : "border-line",
+                  "grid size-9 place-items-center rounded-full border transition-colors duration-500 md:hidden",
+                  menuOpen ? "border-on-contrast/30" : "border-line",
                 )}
                 onClick={() => setMenuOpen((open) => !open)}
                 type="button"
@@ -274,14 +316,14 @@ export function Nav() {
         {menuOpen && (
           <motion.div
             animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
-            className="fixed inset-0 z-40 flex flex-col justify-between bg-ink px-[var(--spacing-gutter)] pt-28 pb-10 text-canvas md:hidden"
+            className="fixed inset-0 z-40 flex flex-col justify-between bg-contrast px-[var(--spacing-gutter)] pt-28 pb-10 text-on-contrast md:hidden"
             exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
             id="mobile-menu"
             initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
             transition={{ duration: 0.6, ease: ease.inOut }}
           >
             <ul className="flex flex-col gap-2">
-              {navLinks.map((link, index) => (
+              {links.map((link, index) => (
                 <li className="overflow-hidden" key={link.href}>
                   <motion.div
                     animate={{ y: "0%", opacity: 1 }}
@@ -306,17 +348,24 @@ export function Nav() {
 
             <motion.div
               animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-between gap-4"
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5, ease: ease.out, delay: 0.5 }}
             >
               <Link
                 className="inline-flex items-center gap-2 text-h3"
-                href={site.ctaHref}
-                onClick={(event) => handleAnchor(event, site.ctaHref)}
+                href={cta.href}
+                onClick={(event) => handleAnchor(event, cta.href)}
               >
-                {site.ctaLabel}
+                {cta.label}
                 <ArrowUpRight className="size-[0.8em]" />
               </Link>
+
+              <LanguageSwitcher
+                className="border-on-contrast/30 sm:hidden"
+                label={labels.toLanguage}
+                locale={locale}
+              />
             </motion.div>
           </motion.div>
         )}

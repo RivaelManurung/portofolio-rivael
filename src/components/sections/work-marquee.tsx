@@ -13,7 +13,8 @@ import {
 import { useRef, useState } from "react";
 import { WorkCard } from "@/components/ui/work-card";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { work } from "@/lib/work";
+import type { Locale } from "@/lib/i18n";
+import type { WorkItem } from "@/lib/work";
 
 /** Percent of the track per second at rest. Negative drifts leftward. */
 const BASE_VELOCITY = -1.6;
@@ -33,7 +34,15 @@ const DRAG_THRESHOLD = 4;
  * twice, so translating the track by half its own width lands copy two
  * exactly where copy one started. Nothing resets, nothing jumps.
  */
-export function WorkMarquee() {
+export function WorkMarquee({
+  items,
+  locale,
+  forLabel,
+}: {
+  items: WorkItem[];
+  locale: Locale;
+  forLabel: string;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const shouldReduce = usePrefersReducedMotion();
 
@@ -140,11 +149,13 @@ export function WorkMarquee() {
             className="flex gap-5"
             key={copy}
           >
-            {work.map((item, index) => (
+            {items.map((item, index) => (
               <WorkCard
                 className="w-[68vw] shrink-0 sm:w-[42vw] lg:w-[26vw] lg:max-w-[420px]"
+                forLabel={forLabel}
                 item={item}
                 key={`${copy}-${item.slug}`}
+                locale={locale}
                 // Only the cards actually on screen at rest are eager;
                 // the duplicate copy never is.
                 priority={copy === 0 && index < 3}

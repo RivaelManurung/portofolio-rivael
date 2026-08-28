@@ -8,22 +8,31 @@ import { ArrowCircle } from "@/components/ui/arrow-circle";
 import { LinkUnderline } from "@/components/ui/link-underline";
 import { Pill } from "@/components/ui/pill";
 import { SectionLabel } from "@/components/ui/section-label";
-import { getNextWork, getWork, work } from "@/lib/work";
+import { getDictionary, isLocale, type Locale, locales } from "@/lib/i18n";
+import { findWork, getNextWork, workSlugs } from "@/lib/work";
 
 export function generateStaticParams() {
-  return work.map((item) => ({ slug: item.slug }));
+  return locales.flatMap((lang) => workSlugs.map((slug) => ({ lang, slug })));
 }
 
 export async function generateMetadata({
   params,
-}: PageProps<"/work/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
-  const item = getWork(slug);
+}: PageProps<"/[lang]/work/[slug]">): Promise<Metadata> {
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+
+  const item = findWork(slug, lang);
   if (!item) return {};
 
   return {
     title: item.title,
     description: item.summary,
+    alternates: {
+      canonical: `/${lang}/work/${slug}`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `/${l}/work/${slug}`]),
+      ),
+    },
     openGraph: {
       title: item.title,
       description: item.summary,
@@ -39,31 +48,34 @@ export async function generateMetadata({
  * stack, client, screenshot, repository. The problem/process/solution
  * narrative the PRD calls for needs to be *written* per project — it
  * isn't derivable from the data, and inventing it would put fiction on
- * a page about real work. Phase 5 moves this content to MDX (PRD §2.3),
- * at which point the narrative slots below become real prose.
+ * a page about real work.
  */
 export default async function WorkDetailPage({
   params,
-}: PageProps<"/work/[slug]">) {
-  const { slug } = await params;
-  const item = getWork(slug);
+}: PageProps<"/[lang]/work/[slug]">) {
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
+
+  const locale = lang as Locale;
+  const dict = getDictionary(locale);
+  const item = findWork(slug, locale);
 
   if (!item) notFound();
 
-  const next = getNextWork(slug);
+  const next = getNextWork(slug, locale);
 
   return (
     <article>
       {/* Header */}
       <header className="shell pt-40 pb-14">
         <Reveal>
-          <SectionLabel>Case study</SectionLabel>
+          <SectionLabel>{dict.detail.label}</SectionLabel>
         </Reveal>
 
         <SplitText
           as="h1"
           by="word"
-          className="mt-6 max-w-[18ch] font-display text-h1 font-light"
+          className="mt-6 block max-w-[18ch] font-display font-light text-h1"
           stagger={0.05}
           trigger="mount"
         >
@@ -71,10 +83,12 @@ export default async function WorkDetailPage({
         </SplitText>
 
         <Reveal className="mt-6 flex items-center gap-5" index={2}>
-          <span className="text-label">For {item.client}</span>
+          <span className="text-label">
+            {dict.work.for} {item.client}
+          </span>
           <span aria-hidden className="h-px w-8 bg-line" />
-          <LinkUnderline arrow={false} href="/work">
-            All projects
+          <LinkUnderline arrow={false} href={`/${locale}/work`}>
+            {dict.detail.allProjects}
           </LinkUnderline>
         </Reveal>
       </header>
@@ -100,12 +114,12 @@ export default async function WorkDetailPage({
         <Reveal className="lg:col-span-4" index={0}>
           <dl className="space-y-8 border-line border-t pt-8">
             <div>
-              <dt className="text-label">Built for</dt>
+              <dt className="text-label">{dict.detail.builtFor}</dt>
               <dd className="mt-2">{item.client}</dd>
             </div>
 
             <div>
-              <dt className="text-label">Stack</dt>
+              <dt className="text-label">{dict.detail.stack}</dt>
               <dd className="mt-3 flex flex-wrap gap-2">
                 {item.stack.map((tech) => (
                   <Pill key={tech}>{tech}</Pill>
@@ -114,9 +128,11 @@ export default async function WorkDetailPage({
             </div>
 
             <div>
-              <dt className="text-label">Source</dt>
+              <dt className="text-label">{dict.detail.source}</dt>
               <dd className="mt-2">
-                <LinkUnderline href={item.repo}>View on GitHub</LinkUnderline>
+                <LinkUnderline href={item.repo}>
+                  {dict.detail.viewSource}
+                </LinkUnderline>
               </dd>
             </div>
           </dl>
@@ -124,7 +140,7 @@ export default async function WorkDetailPage({
 
         <div className="lg:col-span-7 lg:col-start-6">
           <Reveal index={1}>
-            <h2 className="font-display text-h3">About this project</h2>
+            <h2 className="font-display text-h3">{dict.detail.about}</h2>
           </Reveal>
 
           <Reveal index={2}>
@@ -139,11 +155,9 @@ export default async function WorkDetailPage({
               fiction about work that really happened.
             */}
             <div className="mt-10 rounded-md border border-line border-dashed p-6">
-              <p className="text-label">Write-up in progress</p>
-              <p className="mt-3 max-w-[52ch] text-meta text-ink-muted">
-                The full breakdown — the problem, the decisions, and what
-                shipped — is being written. The repository above has the code in
-                the meantime.
+              <p className="text-label">{dict.detail.wipTitle}</p>
+              <p className="mt-3 max-w-[52ch] text-ink-muted text-meta">
+                {dict.detail.wipBody}
               </p>
             </div>
           </Reveal>
@@ -154,11 +168,11 @@ export default async function WorkDetailPage({
       <Reveal className="shell pb-section" index={0}>
         <Link
           className="group flex items-center justify-between gap-6 border-line border-t py-10"
-          href={`/work/${next.slug}`}
+          href={`/${locale}/work/${next.slug}`}
         >
           <div>
-            <span className="text-label">Next project</span>
-            <p className="mt-3 font-display text-h2 font-light transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-3">
+            <span className="text-label">{dict.detail.next}</span>
+            <p className="mt-3 font-display font-light text-h2 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-3">
               {next.title}
             </p>
           </div>

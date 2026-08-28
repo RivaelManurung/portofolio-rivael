@@ -3,33 +3,66 @@
   "site": {
     "name": "Rivael Hasiholan Manurung",
     "shortName": "Rivael",
-    "role": "Web Developer",
+    "role": {
+      "en": "Web Developer",
+      "id": "Web Developer"
+    },
     "year": "2026",
     "email": "rivaelmanurung3@gmail.com",
-    "tagline": "It's Rivael, a web developer",
-    "description": "Fresh graduate in Information Technology with a strong passion for software development. Experienced in web and mobile application development using Node.js, PHP, JavaScript, Golang and Laravel. Skilled in SQL database management and API development, and familiar with front-end work in React. Strong in problem-solving and teamwork, with a focus on building efficient, scalable solutions.",
-    "bio": "As a back-end engineer I focus on the server-side of applications and on making sure they work well with the front end. I work across Node.js, PHP, Java and Golang, with a lot of time spent in Laravel, and I contribute across the whole development process rather than just my slice of it. Alongside the back end I build front-ends in React and manage SQL databases. I follow established practices to build systems that scale, keep databases clean and test thoroughly — the aim being a codebase where the front and back ends meet without friction.",
+    "tagline": {
+      "en": "It's Rivael, a web developer",
+      "id": "Saya Rivael, seorang web developer"
+    },
+    "description": {
+      "en": "Fresh graduate in Information Technology with a strong passion for software development. Experienced in web and mobile application development using Node.js, PHP, JavaScript, Golang and Laravel. Skilled in SQL database management and API development, and familiar with front-end work in React. Strong in problem-solving and teamwork, with a focus on building efficient, scalable solutions.",
+      "id": "Lulusan baru Teknologi Informasi dengan minat kuat pada pengembangan perangkat lunak. Berpengalaman membangun aplikasi web dan mobile dengan Node.js, PHP, JavaScript, Golang, dan Laravel. Terbiasa mengelola basis data SQL dan membangun API, serta familier dengan pengembangan front-end memakai React. Kuat dalam pemecahan masalah dan kerja tim, dengan fokus pada solusi yang efisien dan mudah diskalakan."
+    },
+    "bio": {
+      "en": "As a back-end engineer I focus on the server-side of applications and on making sure they work well with the front end. I work across Node.js, PHP, Java and Golang, with a lot of time spent in Laravel, and I contribute across the whole development process rather than just my slice of it. Alongside the back end I build front-ends in React and manage SQL databases. I follow established practices to build systems that scale, keep databases clean and test thoroughly — the aim being a codebase where the front and back ends meet without friction.",
+      "id": "Sebagai back-end engineer, fokus saya ada di sisi server aplikasi dan memastikannya bekerja mulus dengan front-end. Saya bekerja dengan Node.js, PHP, Java, dan Golang, dengan waktu terbanyak di Laravel, dan terlibat di seluruh proses pengembangan — bukan hanya bagian saya sendiri. Selain back-end, saya membangun front-end dengan React dan mengelola basis data SQL. Saya mengikuti praktik yang sudah mapan agar sistem mudah diskalakan, basis data tetap rapi, dan pengujian dilakukan menyeluruh — tujuannya satu: tempat front-end dan back-end bertemu tanpa gesekan."
+    },
     "url": "https://rivaelmanurung.dev",
-    "contactCopy": "Thank you for reaching out. If there's something specific you'd like to discuss, email me directly — I aim to reply within 24 hours, though it can take a little longer when things are busy. You're also welcome to connect on any of the links below.",
-    "ctaLabel": "Get in touch",
+    "contactCopy": {
+      "en": "Thank you for reaching out. If there's something specific you'd like to discuss, email me directly — I aim to reply within 24 hours, though it can take a little longer when things are busy. You're also welcome to connect on any of the links below.",
+      "id": "Terima kasih sudah menghubungi. Kalau ada yang ingin dibicarakan secara spesifik, kirim email langsung — saya berusaha membalas dalam 24 jam, meski bisa lebih lama saat sedang padat. Silakan juga terhubung lewat tautan di bawah."
+    },
+    "ctaLabel": {
+      "en": "Get in touch",
+      "id": "Hubungi saya"
+    },
     "ctaHref": "/#contact",
-    "availability": "Open to new opportunities"
+    "availability": {
+      "en": "Open to new opportunities",
+      "id": "Terbuka untuk peluang baru"
+    }
   },
   "nav": [
     {
-      "label": "About",
+      "label": {
+        "en": "About",
+        "id": "Tentang"
+      },
       "href": "/#about"
     },
     {
-      "label": "Portfolio",
+      "label": {
+        "en": "Portfolio",
+        "id": "Portofolio"
+      },
       "href": "/#work"
     },
     {
-      "label": "Experience",
+      "label": {
+        "en": "Experience",
+        "id": "Pengalaman"
+      },
       "href": "/#experience"
     },
     {
-      "label": "Contact",
+      "label": {
+        "en": "Contact",
+        "id": "Kontak"
+      },
       "href": "/#contact"
     }
   ],
@@ -53,7 +86,10 @@
   ],
   "education": {
     "school": "Institute of Technology Del",
-    "degree": "Associate Degree in Information Technology",
+    "degree": {
+      "en": "Associate Degree in Information Technology",
+      "id": "D3 Teknologi Informasi"
+    },
     "period": "2022 — 2025",
     "logo": "/images/del.png",
     "logoWidth": 200,
@@ -61,15 +97,24 @@
   },
   "experience": [
     {
-      "position": "Software Engineer",
+      "position": {
+        "en": "Software Engineer",
+        "id": "Software Engineer"
+      },
       "company": "Dinas Kominfo",
       "period": "September 2024",
       "logo": "/images/diskominfo.png",
       "logoWidth": 190,
       "logoHeight": 265,
       "points": [
-        "Built an internal website using the Laravel framework.",
-        "Built the Kominfo attendance system using QR codes."
+        {
+          "en": "Built an internal website using the Laravel framework.",
+          "id": "Membangun website internal dengan framework Laravel."
+        },
+        {
+          "en": "Built the Kominfo attendance system using QR codes.",
+          "id": "Membangun sistem absensi Kominfo berbasis QR code."
+        }
       ],
       "tags": [
         "Laravel",
@@ -77,15 +122,24 @@
       ]
     },
     {
-      "position": "Web Developer",
+      "position": {
+        "en": "Web Developer",
+        "id": "Web Developer"
+      },
       "company": "Infinite Learning",
       "period": "September 2024",
       "logo": "/images/infinitelearning.png",
       "logoWidth": 225,
       "logoHeight": 225,
       "points": [
-        "Designed website interfaces in Figma.",
-        "Built a website using React and Express.js."
+        {
+          "en": "Designed website interfaces in Figma.",
+          "id": "Merancang antarmuka website di Figma."
+        },
+        {
+          "en": "Built a website using React and Express.js.",
+          "id": "Membangun website dengan React dan Express.js."
+        }
       ],
       "tags": [
         "React",
@@ -94,16 +148,28 @@
       ]
     },
     {
-      "position": "Flutter Mobile App Development",
+      "position": {
+        "en": "Flutter Mobile App Development",
+        "id": "Pengembangan Aplikasi Mobile Flutter"
+      },
       "company": "SanberCode",
       "period": "July 2023",
       "logo": "/images/sanbercode.jpeg",
       "logoWidth": 288,
       "logoHeight": 175,
       "points": [
-        "Designed apps using Dart.",
-        "Built an application with the Flutter framework.",
-        "Used Firebase for authentication."
+        {
+          "en": "Designed apps using Dart.",
+          "id": "Merancang aplikasi dengan Dart."
+        },
+        {
+          "en": "Built an application with the Flutter framework.",
+          "id": "Membangun aplikasi dengan framework Flutter."
+        },
+        {
+          "en": "Used Firebase for authentication.",
+          "id": "Menggunakan Firebase untuk autentikasi."
+        }
       ],
       "tags": [
         "Flutter",
@@ -112,14 +178,20 @@
       ]
     },
     {
-      "position": "Web Development",
+      "position": {
+        "en": "Web Development",
+        "id": "Pengembangan Web"
+      },
       "company": "Baparekraf Digital Talent",
       "period": "May 2023 — July 2023",
       "logo": "/images/baparekraf.png",
       "logoWidth": 225,
       "logoHeight": 225,
       "points": [
-        "Learned the Kotlin programming language."
+        {
+          "en": "Learned the Kotlin programming language.",
+          "id": "Mempelajari bahasa pemrograman Kotlin."
+        }
       ],
       "tags": [
         "Kotlin"
@@ -210,7 +282,10 @@
   ],
   "skillGroups": [
     {
-      "label": "Languages",
+      "label": {
+        "en": "Languages",
+        "id": "Bahasa"
+      },
       "items": [
         "JavaScript",
         "PHP",
@@ -223,7 +298,10 @@
       ]
     },
     {
-      "label": "Frameworks",
+      "label": {
+        "en": "Frameworks",
+        "id": "Framework"
+      },
       "items": [
         "Laravel",
         "React",
@@ -237,7 +315,10 @@
       ]
     },
     {
-      "label": "Markup & styling",
+      "label": {
+        "en": "Markup & styling",
+        "id": "Markup & styling"
+      },
       "items": [
         "HTML",
         "CSS",
@@ -247,7 +328,10 @@
       ]
     },
     {
-      "label": "Data",
+      "label": {
+        "en": "Data",
+        "id": "Data"
+      },
       "items": [
         "MySQL",
         "PostgreSQL",
@@ -258,7 +342,10 @@
       ]
     },
     {
-      "label": "Tools & platforms",
+      "label": {
+        "en": "Tools & platforms",
+        "id": "Tools & platform"
+      },
       "items": [
         "Git",
         "GitHub",
@@ -286,8 +373,14 @@
     {
       "slug": "charging-station",
       "title": "Charging Station",
-      "client": "Campus project",
-      "summary": "A charging system for electric vehicle stations with digital payment built in. Drivers charge their car and settle securely online, which is what makes the stations practical to operate at scale.",
+      "client": {
+        "en": "Campus project",
+        "id": "Proyek kampus"
+      },
+      "summary": {
+        "en": "A charging system for electric vehicle stations with digital payment built in. Drivers charge their car and settle securely online, which is what makes the stations practical to operate at scale.",
+        "id": "Sistem pengisian daya untuk stasiun kendaraan listrik dengan pembayaran digital. Pengemudi mengisi daya lalu membayar online dengan aman — itu yang membuat stasiunnya praktis dijalankan dalam skala besar."
+      },
       "stack": [
         "Laravel",
         "PHP",
@@ -296,15 +389,21 @@
         "MySQL"
       ],
       "repo": "https://github.com/danielmanalu07/chargingstation",
-      "image": "/images/charging.png",
+      "image": "/images/charging.webp",
       "width": 1080,
       "height": 1080
     },
     {
       "slug": "nusantara-oleh-oleh",
       "title": "Nusantara Oleh-Oleh",
-      "client": "Project Menara",
-      "summary": "An e-commerce platform covering the whole of an online store — products, sales and customer interactions — on a Go service layer with Redis, PostgreSQL and RabbitMQ behind a Flutter app.",
+      "client": {
+        "en": "Project Menara",
+        "id": "Project Menara"
+      },
+      "summary": {
+        "en": "An e-commerce platform covering the whole of an online store — products, sales and customer interactions — on a Go service layer with Redis, PostgreSQL and RabbitMQ behind a Flutter app.",
+        "id": "Platform e-commerce yang mencakup seluruh operasi toko online — produk, penjualan, dan interaksi pelanggan — di atas layanan Go dengan Redis, PostgreSQL, dan RabbitMQ, dengan aplikasi Flutter di depannya."
+      },
       "stack": [
         "Flutter",
         "Go",
@@ -314,15 +413,21 @@
         "RabbitMQ"
       ],
       "repo": "https://github.com/Project-Menara/nusantara_mobile",
-      "image": "/images/nusantara.png",
+      "image": "/images/nusantara.webp",
       "width": 1080,
       "height": 1080
     },
     {
       "slug": "inventory-tsth2",
       "title": "Inventory Management TSTH2",
-      "client": "TSTH2",
-      "summary": "Warehouse inventory management covering item check-in and check-out, usage tracking and stock reporting — a Laravel 11 back end with a Flutter app handling QR code transactions on the floor.",
+      "client": {
+        "en": "TSTH2",
+        "id": "TSTH2"
+      },
+      "summary": {
+        "en": "Warehouse inventory management covering item check-in and check-out, usage tracking and stock reporting — a Laravel 11 back end with a Flutter app handling QR code transactions on the floor.",
+        "id": "Manajemen inventaris gudang: barang masuk dan keluar, pelacakan pemakaian, dan pelaporan stok — back end Laravel 11 dengan aplikasi Flutter yang menangani transaksi QR code langsung di lapangan."
+      },
       "stack": [
         "Laravel 11",
         "Blade",
@@ -332,15 +437,21 @@
         "QR Code"
       ],
       "repo": "https://github.com/RivaelManurung/Website-dan-aplikasi-inventory-tsht2",
-      "image": "/images/TSTH2.png",
-      "width": 1970,
-      "height": 1710
+      "image": "/images/TSTH2.webp",
+      "width": 1600,
+      "height": 1389
     },
     {
       "slug": "the-deck",
       "title": "The Deck",
-      "client": "PA2 Kel 15",
-      "summary": "A multilingual food ordering system: Flutter on the front, Go on the back, and a Laravel admin panel for the restaurant staff who actually run it day to day.",
+      "client": {
+        "en": "PA2 Kel 15",
+        "id": "PA2 Kel 15"
+      },
+      "summary": {
+        "en": "A multilingual food ordering system: Flutter on the front, Go on the back, and a Laravel admin panel for the restaurant staff who actually run it day to day.",
+        "id": "Sistem pemesanan makanan multibahasa: Flutter di depan, Go di belakang, dan panel admin Laravel untuk staf restoran yang menjalankannya setiap hari."
+      },
       "stack": [
         "Flutter",
         "Dart",
@@ -350,15 +461,21 @@
         "Bootstrap"
       ],
       "repo": "https://github.com/danielmanalu07/PA2-Kel15",
-      "image": "/images/Thedeckres.png",
+      "image": "/images/Thedeckres.webp",
       "width": 1080,
       "height": 1080
     },
     {
       "slug": "agrilearn",
       "title": "Agrilearn",
-      "client": "Massive Project",
-      "summary": "A full-stack educational platform for agriculture — forums, categorised articles and training videos supporting knowledge sharing between farming communities.",
+      "client": {
+        "en": "Massive Project",
+        "id": "Massive Project"
+      },
+      "summary": {
+        "en": "A full-stack educational platform for agriculture — forums, categorised articles and training videos supporting knowledge sharing between farming communities.",
+        "id": "Platform edukasi pertanian full-stack — forum, artikel berkategori, dan video pelatihan untuk menopang pertukaran pengetahuan antar komunitas petani."
+      },
       "stack": [
         "Vite",
         "React",
@@ -367,15 +484,21 @@
         "JavaScript"
       ],
       "repo": "https://github.com/RivaelManurung/massive",
-      "image": "/images/Agrilea.png",
-      "width": 1970,
-      "height": 1710
+      "image": "/images/Agrilea.webp",
+      "width": 1600,
+      "height": 1389
     },
     {
       "slug": "absensi-kominfo",
       "title": "Absensi Kominfo",
-      "client": "Dinas Kominfo",
-      "summary": "An employee attendance system built during the Kominfo placement: a structured way to record, track and manage absences so administrators keep accurate records without paper.",
+      "client": {
+        "en": "Dinas Kominfo",
+        "id": "Dinas Kominfo"
+      },
+      "summary": {
+        "en": "An employee attendance system built during the Kominfo placement: a structured way to record, track and manage absences so administrators keep accurate records without paper.",
+        "id": "Sistem absensi pegawai yang dibangun saat penempatan di Kominfo: cara terstruktur untuk mencatat, melacak, dan mengelola kehadiran agar administrator punya rekam data akurat tanpa kertas."
+      },
       "stack": [
         "Laravel",
         "PHP",
@@ -383,15 +506,21 @@
         "JavaScript"
       ],
       "repo": "https://github.com/danielmanalu07/Komfend-WEB-DEV",
-      "image": "/images/absensi.png",
-      "width": 1970,
-      "height": 1710
+      "image": "/images/absensi.webp",
+      "width": 1600,
+      "height": 1389
     },
     {
       "slug": "sitani",
       "title": "SiTani",
-      "client": "PA1 Kel 2",
-      "summary": "A platform for farmers to borrow agricultural equipment — requesting, borrowing and tracking tools on one side, inventory and transaction monitoring for administrators on the other.",
+      "client": {
+        "en": "PA1 Kel 2",
+        "id": "PA1 Kel 2"
+      },
+      "summary": {
+        "en": "A platform for farmers to borrow agricultural equipment — requesting, borrowing and tracking tools on one side, inventory and transaction monitoring for administrators on the other.",
+        "id": "Platform peminjaman alat pertanian — petani mengajukan, meminjam, dan melacak alat di satu sisi; administrator memantau inventaris dan transaksi di sisi lain."
+      },
       "stack": [
         "Laravel",
         "PHP",
@@ -399,15 +528,21 @@
         "Bootstrap"
       ],
       "repo": "https://github.com/rickyananada1/PA1-Kel2",
-      "image": "/images/pa1.png",
-      "width": 1881,
-      "height": 922
+      "image": "/images/pa1.webp",
+      "width": 1600,
+      "height": 784
     },
     {
       "slug": "go-webservice",
       "title": "Go-WebService",
-      "client": "Open source",
-      "summary": "A RESTful API applying Clean Architecture: JWT authentication, middleware-protected routes and full CRUD for products and categories, in a layered structure built to stay testable.",
+      "client": {
+        "en": "Open source",
+        "id": "Open source"
+      },
+      "summary": {
+        "en": "A RESTful API applying Clean Architecture: JWT authentication, middleware-protected routes and full CRUD for products and categories, in a layered structure built to stay testable.",
+        "id": "RESTful API yang menerapkan Clean Architecture: autentikasi JWT, rute terproteksi middleware, dan CRUD lengkap untuk produk dan kategori, dalam struktur berlapis yang dirancang tetap mudah diuji."
+      },
       "stack": [
         "Go",
         "Gin",
@@ -417,15 +552,21 @@
         "Docker"
       ],
       "repo": "https://github.com/RivaelManurung/Go-WebService-CleanArchitecture",
-      "image": "/images/project1.png",
+      "image": "/images/project1.webp",
       "width": 1024,
       "height": 1024
     },
     {
       "slug": "tic-tac-toe",
       "title": "Tic Tac Toe",
-      "client": "Side project",
-      "summary": "A two-player Tic Tac Toe built in Vue, with win detection, draw conditions and a reset. Small on purpose — a clean place to get state handling exactly right.",
+      "client": {
+        "en": "Side project",
+        "id": "Proyek pribadi"
+      },
+      "summary": {
+        "en": "A two-player Tic Tac Toe built in Vue, with win detection, draw conditions and a reset. Small on purpose — a clean place to get state handling exactly right.",
+        "id": "Tic Tac Toe dua pemain dengan Vue, lengkap dengan deteksi kemenangan, kondisi seri, dan reset. Sengaja kecil — tempat bersih untuk membuat penanganan state benar-benar rapi."
+      },
       "stack": [
         "Vue.js",
         "JavaScript",
@@ -437,5 +578,169 @@
       "width": 1919,
       "height": 875
     }
-  ]
+  ],
+  "ui": {
+    "en": {
+      "nav": {
+        "home": "home",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "toTheme": "Switch theme",
+        "toLanguage": "Switch language",
+        "skip": "Skip to content"
+      },
+      "hero": {
+        "scroll": "Scroll down",
+        "projects": "Projects shipped",
+        "technologies": "Technologies used"
+      },
+      "about": {
+        "title": "About Me",
+        "mostDays": "Most days",
+        "pointOne": "I work across the whole stack — Laravel and Go on the back end, React and Flutter on the front — rather than handing off at the API boundary.",
+        "pointTwo": "Most of what I've shipped runs for someone: campus operations, a government office, a warehouse floor. That constraint shapes how I build."
+      },
+      "work": {
+        "label": "Portfolio",
+        "title": "Things I've built",
+        "intro": "Web and mobile work, built for campuses, a government office and a warehouse floor. Drag the strip, or open any one for the stack and the source.",
+        "checkMore": "Check out more",
+        "viewAll": "View all projects",
+        "for": "For"
+      },
+      "workPage": {
+        "label": "Portfolio",
+        "title": "Selected work",
+        "intro": "Web and mobile projects — campus systems, a government tool, e-commerce, warehouse inventory and a handful of APIs. Laravel and Go on the back end, Flutter and React on the front. Every one has its source public.",
+        "readCase": "Read case study",
+        "back": "← Back to home"
+      },
+      "detail": {
+        "label": "Case study",
+        "allProjects": "All projects",
+        "builtFor": "Built for",
+        "stack": "Stack",
+        "source": "Source",
+        "viewSource": "View on GitHub",
+        "about": "About this project",
+        "wipTitle": "Write-up in progress",
+        "wipBody": "The full breakdown — the problem, the decisions, and what shipped — is being written. The repository above has the code in the meantime.",
+        "next": "Next project"
+      },
+      "experience": {
+        "label": "Experience",
+        "title": "Where the practice came from",
+        "intro": "Placements across government offices, bootcamps and industry programmes — each one adding a language, a framework or a way of working that shows up in the projects. Each row opens.",
+        "certifications": "certifications"
+      },
+      "skills": {
+        "label": "Stack",
+        "title": "Technologies I build with"
+      },
+      "connect": {
+        "title": "Let's connect",
+        "intro": "A role, a collaboration, or just a question about something I've built — any of these reach me.",
+        "email": "Email",
+        "elsewhere": "Elsewhere"
+      },
+      "copy": {
+        "copied": "Copied!",
+        "announce": "Email address copied to clipboard"
+      },
+      "footer": {
+        "home": "Home",
+        "builtWith": "Built with Next.js"
+      },
+      "notFound": {
+        "label": "404",
+        "title": "This page doesn't exist",
+        "body": "The link may be out of date, or the page may have moved.",
+        "back": "Back to home"
+      },
+      "cursor": {
+        "view": "View"
+      }
+    },
+    "id": {
+      "nav": {
+        "home": "beranda",
+        "openMenu": "Buka menu",
+        "closeMenu": "Tutup menu",
+        "toTheme": "Ganti tema",
+        "toLanguage": "Ganti bahasa",
+        "skip": "Lompat ke konten"
+      },
+      "hero": {
+        "scroll": "Gulir ke bawah",
+        "projects": "Proyek dikerjakan",
+        "technologies": "Teknologi dipakai"
+      },
+      "about": {
+        "title": "Tentang Saya",
+        "mostDays": "Sehari-hari",
+        "pointOne": "Saya bekerja di seluruh stack — Laravel dan Go di belakang, React dan Flutter di depan — bukan berhenti di batas API.",
+        "pointTwo": "Sebagian besar yang saya kerjakan benar-benar dipakai orang: operasional kampus, kantor pemerintahan, lantai gudang. Batasan itu yang membentuk cara saya membangun."
+      },
+      "work": {
+        "label": "Portofolio",
+        "title": "Yang pernah saya bangun",
+        "intro": "Pekerjaan web dan mobile untuk kampus, kantor pemerintahan, dan gudang. Geser strip-nya, atau buka salah satu untuk melihat stack dan kodenya.",
+        "checkMore": "Lihat selengkapnya",
+        "viewAll": "Lihat semua proyek",
+        "for": "Untuk"
+      },
+      "workPage": {
+        "label": "Portofolio",
+        "title": "Karya terpilih",
+        "intro": "Proyek web dan mobile — sistem kampus, perangkat pemerintahan, e-commerce, inventaris gudang, dan sejumlah API. Laravel dan Go di belakang, Flutter dan React di depan. Semuanya terbuka kodenya.",
+        "readCase": "Baca studi kasus",
+        "back": "← Kembali ke beranda"
+      },
+      "detail": {
+        "label": "Studi kasus",
+        "allProjects": "Semua proyek",
+        "builtFor": "Dibangun untuk",
+        "stack": "Stack",
+        "source": "Kode sumber",
+        "viewSource": "Lihat di GitHub",
+        "about": "Tentang proyek ini",
+        "wipTitle": "Ulasan sedang ditulis",
+        "wipBody": "Uraian lengkapnya — masalahnya, keputusannya, dan apa yang akhirnya jadi — sedang ditulis. Sementara itu, kodenya ada di repositori di atas.",
+        "next": "Proyek berikutnya"
+      },
+      "experience": {
+        "label": "Pengalaman",
+        "title": "Dari mana praktiknya datang",
+        "intro": "Penempatan di kantor pemerintahan, bootcamp, dan program industri — masing-masing menambah satu bahasa, satu framework, atau satu cara kerja yang terlihat di proyek-proyeknya. Setiap baris bisa dibuka.",
+        "certifications": "sertifikasi"
+      },
+      "skills": {
+        "label": "Stack",
+        "title": "Teknologi yang saya pakai"
+      },
+      "connect": {
+        "title": "Mari terhubung",
+        "intro": "Tawaran kerja, kolaborasi, atau sekadar pertanyaan soal sesuatu yang saya bangun — semuanya sampai ke saya.",
+        "email": "Email",
+        "elsewhere": "Di tempat lain"
+      },
+      "copy": {
+        "copied": "Tersalin!",
+        "announce": "Alamat email tersalin ke papan klip"
+      },
+      "footer": {
+        "home": "Beranda",
+        "builtWith": "Dibangun dengan Next.js"
+      },
+      "notFound": {
+        "label": "404",
+        "title": "Halaman ini tidak ada",
+        "body": "Tautannya mungkin sudah kedaluwarsa, atau halamannya sudah dipindahkan.",
+        "back": "Kembali ke beranda"
+      },
+      "cursor": {
+        "view": "Lihat"
+      }
+    }
+  }
 }

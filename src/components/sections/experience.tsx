@@ -7,7 +7,7 @@ import { ArrowUpRight } from "@/components/ui/arrow";
 import { ArrowCircle } from "@/components/ui/arrow-circle";
 import { Pill } from "@/components/ui/pill";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { type Experience, experience } from "@/lib/experience";
+import type { Experience } from "@/lib/experience";
 import { ease, viewport } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -24,10 +24,10 @@ import { cn } from "@/lib/utils";
  * together visually.
  */
 export function ExperienceTimeline({
-  items = experience,
+  items,
   className,
 }: {
-  items?: Experience[];
+  items: Experience[];
   className?: string;
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

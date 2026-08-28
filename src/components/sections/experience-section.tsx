@@ -2,7 +2,8 @@ import Image from "next/image";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitText } from "@/components/motion/split-text";
 import { SectionLabel } from "@/components/ui/section-label";
-import { education } from "@/lib/experience";
+import { getEducation, getExperience } from "@/lib/experience";
+import type { Dictionary, Locale } from "@/lib/i18n";
 import { Certificates } from "./certificates";
 import { ExperienceTimeline } from "./experience";
 
@@ -13,31 +14,37 @@ import { ExperienceTimeline } from "./experience";
  * the single-page layout means this is the only place any of them
  * appear.
  */
-export function ExperienceSection() {
+export function ExperienceSection({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+}) {
+  const education = getEducation(locale);
+
   return (
     <section className="shell py-section" id="experience">
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="lg:col-span-6">
           <Reveal>
-            <SectionLabel>Experience</SectionLabel>
+            <SectionLabel>{dict.experience.label}</SectionLabel>
           </Reveal>
 
           <SplitText
             as="h2"
             by="word"
-            className="mt-6 block max-w-[14ch] font-display text-h1 font-light"
+            className="mt-6 block max-w-[14ch] font-display font-light text-h1"
             stagger={0.05}
           >
-            Where the practice came from
+            {dict.experience.title}
           </SplitText>
         </div>
 
         <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
           <Reveal index={1}>
             <p className="max-w-[46ch] text-ink-muted">
-              Placements across government offices, bootcamps and industry
-              programmes — each one adding a language, a framework or a way of
-              working that shows up in the projects. Each row opens.
+              {dict.experience.intro}
             </p>
           </Reveal>
 
@@ -57,10 +64,10 @@ export function ExperienceSection() {
               </div>
               <div>
                 <p className="text-[0.9375rem]">{education.school}</p>
-                <p className="mt-0.5 text-meta text-ink-muted">
+                <p className="mt-0.5 text-ink-muted text-meta">
                   {education.degree}
                 </p>
-                <p className="mt-0.5 text-meta text-ink-faint">
+                <p className="mt-0.5 text-ink-faint text-meta">
                   {education.period}
                 </p>
               </div>
@@ -69,8 +76,8 @@ export function ExperienceSection() {
         </div>
       </div>
 
-      <ExperienceTimeline />
-      <Certificates />
+      <ExperienceTimeline items={getExperience(locale)} />
+      <Certificates label={dict.experience.certifications} />
     </section>
   );
 }

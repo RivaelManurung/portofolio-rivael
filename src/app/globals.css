@@ -1,24 +1,84 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: the theme is a deliberate user choice that
+   persists, so it can't be driven by the media query alone. The script
+   in the root layout sets `.dark` before first paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   PALETTE — PRD §3.1
+   Two scopes, one set of names. Utilities resolve through
+   var(), so every component is theme-agnostic by construction.
+
+   PRD §1.3 originally ruled out dark mode ("the design commits
+   to one light look"). That was overruled deliberately, and it
+   cost almost nothing precisely because colour was already
+   centralised here rather than scattered through components.
+   ============================================================ */
+
+:root {
+  --ink: #0a0a0a;
+  --ink-muted: #6e6e6e;
+  --ink-faint: #a3a3a3;
+  --line: #e4e4e4;
+  --surface: #ffffff;
+  --canvas: #f2f2f0;
+  --canvas-alt: #ebebe8;
+
+  /* The inverted band: closing CTA, footer, mobile overlay, hero
+     photo panel. Its job is to break the page's rhythm, so it flips
+     with the theme rather than staying literally black. */
+  --contrast: #0a0a0a;
+  --on-contrast: #f2f2f0;
+
+  --focus: #2563eb;
+
+  color-scheme: light;
+}
+
+.dark {
+  --ink: #f0f0ee;
+  --ink-muted: #a0a09c;
+  --ink-faint: #6f6f6b;
+  --line: #2b2b28;
+  --surface: #191917;
+  --canvas: #0e0e0d;
+  --canvas-alt: #161614;
+
+  /* Elevated rather than inverted. A full-bleed white band in a dark
+     page is a flashbang; lifting the surface keeps the structural
+     contrast without the glare. */
+  --contrast: #1c1c19;
+  --on-contrast: #f0f0ee;
+
+  --focus: #7aa2ff;
+
+  color-scheme: dark;
+}
+
 /* ============================================================
    DESIGN TOKENS — PRD §3
    Tailwind v4 CSS-first config. Every token here becomes a
    utility automatically (--color-ink → bg-ink / text-ink, etc).
    ============================================================ */
 
-@theme {
-  /* --- Color (PRD §3.1) -------------------------------------
-     Palette is deliberately near-monochrome. Color enters the
-     page only through work photography, never through the UI. */
-  --color-ink: #0a0a0a;
-  --color-ink-muted: #6e6e6e;
-  --color-ink-faint: #a3a3a3;
-  --color-line: #e4e4e4;
-  --color-surface: #ffffff;
-  --color-canvas: #f2f2f0;
-  --color-canvas-alt: #ebebe8;
-  --color-focus: #2563eb;
+@theme inline {
+  /* `inline` keeps the var() reference in the generated utility
+     instead of baking in the resolved value — which is what lets
+     `.dark` re-point them at runtime. */
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-canvas: var(--canvas);
+  --color-canvas-alt: var(--canvas-alt);
+  --color-contrast: var(--contrast);
+  --color-on-contrast: var(--on-contrast);
+  --color-focus: var(--focus);
+}
 
+@theme {
   /* --- Typography (PRD §3.2) ------------------------------- */
   --font-display: var(--font-general-sans), ui-sans-serif, system-ui,
     sans-serif;
@@ -50,9 +110,7 @@
   /* --- Space & shape (PRD §3.3) ---------------------------- */
   --spacing-section: clamp(5rem, 12vw, 11.25rem);
   --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
-  /* Height of the fixed footer the page scrolls away to reveal (§4.9).
-     Tall enough for the reveal to register, short enough that the band
-     doesn't read as an empty room. */
+  /* Height of the fixed footer the page scrolls away to reveal (§4.9). */
   --spacing-curtain: clamp(14rem, 24vh, 17rem);
 
   --radius-sm: 8px;
@@ -79,8 +137,8 @@
   }
 
   body {
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
+    background-color: var(--canvas);
+    color: var(--ink);
     font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: 1.6;
@@ -88,6 +146,9 @@
     -moz-osx-font-smoothing: grayscale;
     /* Every section is full-bleed-capable; never scroll sideways. */
     overflow-x: clip;
+    transition:
+      background-color 0.4s var(--ease-out-expo),
+      color 0.4s var(--ease-out-expo);
   }
 
   h1,
@@ -105,14 +166,20 @@
 
   /* Accessibility: never remove the focus ring without a replacement. */
   :focus-visible {
-    outline: 2px solid var(--color-focus);
+    outline: 2px solid var(--focus);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
   ::selection {
-    background-color: var(--color-ink);
-    color: var(--color-canvas);
+    background-color: var(--ink);
+    color: var(--canvas);
+  }
+
+  /* Photographs are graded for a light page; on a dark one they glare. */
+  .dark img {
+    --dark-image-dim: 0.92;
+    filter: brightness(var(--dark-image-dim));
   }
 
   /* Lenis: html gets `lenis` class; keep scrollbar behaviour sane. */
@@ -148,16 +215,7 @@
   line-height: 1.4;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-ink-faint);
-}
-
-@utility mask-line {
-  /* Wrapper for per-line/char reveals. Extra padding keeps
-     ascenders and descenders from being clipped by the mask. */
-  display: block;
-  overflow: hidden;
-  padding-block: 0.12em;
-  margin-block: -0.12em;
+  color: var(--ink-faint);
 }
 
 /* ============================================================

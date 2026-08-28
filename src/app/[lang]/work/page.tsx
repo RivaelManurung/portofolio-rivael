@@ -1,20 +1,37 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitText } from "@/components/motion/split-text";
 import { ArrowCircle } from "@/components/ui/arrow-circle";
 import { LinkUnderline } from "@/components/ui/link-underline";
 import { Pill } from "@/components/ui/pill";
 import { SectionLabel } from "@/components/ui/section-label";
+import { getDictionary, isLocale, type Locale, locales } from "@/lib/i18n";
 import { coreStack } from "@/lib/site";
-import { work } from "@/lib/work";
+import { getWork } from "@/lib/work";
 
-export const metadata: Metadata = {
-  title: "Portfolio",
-  description:
-    "Selected web and mobile projects — Laravel, Go, Flutter, React and Node.js — with the stack and source behind each one.",
-};
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]/work">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  const dict = getDictionary(lang);
+
+  return {
+    title: dict.workPage.label,
+    description: dict.workPage.intro,
+    alternates: {
+      canonical: `/${lang}/work`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/work`])),
+    },
+  };
+}
 
 /**
  * Portfolio index — the one page that stays separate from the
@@ -25,33 +42,37 @@ export const metadata: Metadata = {
  * and stack, because someone who clicked "view all" has decided to
  * actually read.
  *
- * Rows alternate image side on desktop. That zig-zag is what stops nine
- * near-identical entries reading as a spreadsheet.
+ * Rows alternate image side on desktop. That zig-zag is what stops a
+ * column of near-identical entries reading as a spreadsheet.
  */
-export default function WorkPage() {
+export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+
+  const locale = lang as Locale;
+  const dict = getDictionary(locale);
+  const work = getWork(locale);
+
   return (
     <>
       <header className="shell pt-40 pb-16">
         <Reveal>
-          <SectionLabel>Portfolio</SectionLabel>
+          <SectionLabel>{dict.workPage.label}</SectionLabel>
         </Reveal>
 
         <SplitText
           as="h1"
           by="word"
-          className="mt-6 block max-w-[20ch] font-display text-h1 font-light"
+          className="mt-6 block max-w-[20ch] font-display font-light text-h1"
           stagger={0.05}
           trigger="mount"
         >
-          Selected work
+          {dict.workPage.title}
         </SplitText>
 
         <Reveal index={2}>
           <p className="mt-8 max-w-[58ch] text-ink-muted">
-            Web and mobile projects — campus systems, a government tool,
-            e-commerce, warehouse inventory and a handful of APIs. Laravel and
-            Go on the back end, Flutter and React on the front. Every one has
-            its source public.
+            {dict.workPage.intro}
           </p>
         </Reveal>
 
@@ -71,9 +92,9 @@ export default function WorkPage() {
           <Reveal key={item.slug}>
             <article className="group">
               <Link
-                aria-label={`${item.title} — read the case study`}
+                aria-label={`${item.title} — ${dict.workPage.readCase}`}
                 className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12"
-                href={`/work/${item.slug}`}
+                href={`/${locale}/work/${item.slug}`}
               >
                 <div
                   className={
@@ -92,7 +113,7 @@ export default function WorkPage() {
                       src={item.image}
                       width={item.width}
                     />
-                    <div className="absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/10" />
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
                   </div>
                 </div>
 
@@ -103,7 +124,9 @@ export default function WorkPage() {
                       : "lg:order-1 lg:col-span-4 lg:col-start-1 lg:row-start-1"
                   }
                 >
-                  <span className="text-label">For {item.client}</span>
+                  <span className="text-label">
+                    {dict.work.for} {item.client}
+                  </span>
 
                   <h2 className="mt-3 font-display text-h3">{item.title}</h2>
 
@@ -118,7 +141,7 @@ export default function WorkPage() {
                   </ul>
 
                   <span className="mt-8 inline-flex items-center gap-3 text-[0.9375rem]">
-                    Read case study
+                    {dict.workPage.readCase}
                     <ArrowCircle
                       className="transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-110"
                       size="sm"
@@ -133,8 +156,8 @@ export default function WorkPage() {
 
       <div className="shell pb-section">
         <Reveal>
-          <LinkUnderline arrow={false} href="/">
-            ← Back to home
+          <LinkUnderline arrow={false} href={`/${locale}`}>
+            {dict.workPage.back}
           </LinkUnderline>
         </Reveal>
       </div>

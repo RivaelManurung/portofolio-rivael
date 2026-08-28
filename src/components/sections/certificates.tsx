@@ -10,11 +10,13 @@ import { certificates } from "@/lib/experience";
  * three screens and none of them is a thing you look at, only something
  * you check exists and click to verify.
  */
-export function Certificates() {
+export function Certificates({ label }: { label: string }) {
   return (
     <div className="mt-20">
       <Reveal>
-        <span className="text-label">{certificates.length} certifications</span>
+        <span className="text-label">
+          {certificates.length} {label}
+        </span>
       </Reveal>
 
       <ul className="mt-8 grid gap-x-8 sm:grid-cols-2">
@@ -40,7 +42,7 @@ export function Certificates() {
                 <p className="truncate text-[0.9375rem] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-1.5">
                   {certificate.title}
                 </p>
-                <p className="mt-0.5 text-meta text-ink-faint">
+                <p className="mt-0.5 text-ink-faint text-meta">
                   {certificate.issuer}
                 </p>
               </div>

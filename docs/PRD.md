@@ -1,11 +1,13 @@
 # PRD — Personal Portfolio Website (Rivael Hasiholan Manurung)
 
-**Versi:** 1.1
+**Versi:** 1.2
 **Tanggal:** 27 Agustus 2026
 **Owner:** info@kreasinusantara.id
 **Subjek:** Rivael Hasiholan Manurung — Web Developer
 **Status:** Fase 0–3 terimplementasi; §12 berisi catatan dari pengerjaan
 
+> **v1.2** — dark mode (§12.16), dua bahasa EN/ID dengan locale di URL (§12.15), dan pembersihan aset (§12.17). Dua non-goal di §1.3 dibatalkan secara sadar.
+>
 > **v1.1** — konten berpindah dari persona template "D.Nova" ke data asli dari portfolio v2 (§12.6), dan §12.7–12.9 mencatat tiga bug arsitektur yang ditemukan saat verifikasi visual.
 
 ---
@@ -20,7 +22,7 @@ Gaya visual: **Swiss/editorial minimalis** — banyak white space, tipografi bes
 
 | Tujuan | Metrik Sukses |
 |---|---|
-| Konversi ke konsultasi | ≥ 5% visitor klik "Book A Call" |
+| Konversi ke kontak | ≥ 5% visitor membuka email atau salah satu link sosial |
 | Kredibilitas instan | Bounce rate < 45%, avg. time on page > 90s |
 | Performa | Lighthouse ≥ 95 (semua kategori), LCP < 1.8s, CLS < 0.05 |
 | SEO | Terindeks penuh, skor SEO 100, OG image dinamis |
@@ -35,9 +37,9 @@ Gaya visual: **Swiss/editorial minimalis** — banyak white space, tipografi bes
 ### 1.3 Non-Goals (v1)
 
 - Tidak ada e-commerce / paid product
-- Tidak ada multi-bahasa (struktur i18n disiapkan, konten hanya EN)
+- ~~Tidak ada multi-bahasa~~ — **dibatalkan di v1.2.** EN + ID, locale di URL (§12.15)
 - Tidak ada dashboard admin custom
-- Tidak ada dark mode — desain sengaja commit ke satu look terang (lihat §3.1)
+- ~~Tidak ada dark mode~~ — **dibatalkan di v1.2.** Token warna sudah terpusat, jadi biayanya kecil (§12.16)
 
 ---
 
@@ -642,7 +644,57 @@ Paragraf di `/work` sempat berbunyi *"9 projects across web and mobile — elect
 
 Aturannya: angka boleh muncul di UI selama diturunkan dari data (counter hero, `{certificates.length}`). Daftar isi yang ditulis tangan di dalam prosa tidak boleh, karena tidak ada mekanisme yang memaksanya ikut berubah.
 
-### 12.14 Status per fase
+### 12.15 Internasionalisasi: locale di URL, bukan di state
+
+PRD §1.3 awalnya menolak i18n. Dibatalkan — pembaca yang paling mungkin adalah recruiter Indonesia.
+
+Locale ditaruh di **path** (`/en`, `/id`), bukan di React state atau cookie saja. Alasannya bukan kerapian: kalau `/` menyajikan isi berbeda ke orang berbeda, halamannya tidak bisa dibagikan, tidak bisa di-crawl per bahasa, dan tombol back jadi salah. Konsekuensinya seluruh `app/` bersarang di `app/[lang]/`, sesuai pola yang didokumentasikan Next 16.
+
+Catatan implementasi:
+
+- **`src/proxy.ts`**, bukan `middleware.ts`. Next 16 mengganti nama konvensinya. Daftar locale sengaja **diduplikasi** di sana alih-alih di-import dari `lib/i18n`: modul itu menarik seluruh JSON konten, sedangkan dokumen memperingatkan proxy bisa di-deploy terpisah ke edge. Dua string lebih murah daripada mengirim seluruh isi situs ke handler redirect.
+- **Negosiasi `Accept-Language` ditulis tangan.** `negotiator` + `intl-localematcher` baru layak untuk selusin locale dengan varian regional. Dengan dua, mencocokkan subtag utama menurut urutan quality sudah seluruh algoritmanya.
+- **Cookie `NEXT_LOCALE`** dibaca lebih dulu daripada header, supaya pilihan eksplisit pengguna mengalahkan tebakan browser saat mereka kembali ke domain telanjang.
+- **Terjemahan menempel di record-nya**, di file data yang sama — bukan di file dictionary terpisah. Field struktural (slug, path gambar, URL repo, tanggal, stack) **tidak** diterjemahkan: itu fakta yang sama di kedua bahasa, dan menduplikasinya adalah cara dua salinan mulai berbeda.
+- **Client component menerima string sebagai props**, tidak meng-import modul konten. Kalau `Nav` meng-import `lib/site`, seluruh dataset dua bahasa ikut terkirim ke browser demi lima label link.
+- **`hreflang` + `alternates`** di metadata dan sitemap, supaya mesin pencari membaca dua bahasa itu sebagai terjemahan satu halaman, bukan duplikat yang saling bersaing.
+
+### 12.16 Dark mode: token, bukan `dark:` di mana-mana
+
+PRD §1.3 juga menolak dark mode ("desain commit ke satu look terang"). Dibatalkan atas permintaan.
+
+Biayanya nyaris nol justru karena warna sudah terpusat di `@theme` sejak fase 0 — bukan tersebar sebagai kelas di komponen. Yang berubah cuma dua blok CSS:
+
+```css
+:root { --ink: #0a0a0a; --canvas: #f2f2f0; … }
+.dark { --ink: #f0f0ee; --canvas: #0e0e0d; … }
+@theme inline { --color-ink: var(--ink); … }
+```
+
+`@theme inline` itu kuncinya: tanpa `inline`, Tailwind memanggang nilai yang sudah diresolusi ke dalam utility dan `.dark` tidak bisa mengarahkannya ulang saat runtime.
+
+Dua keputusan yang perlu dicatat:
+
+- **Token `--contrast` / `--on-contrast`.** Band penutup, footer, overlay mobile, dan panel foto hero semuanya "kebalikan halaman". Kalau memakai `bg-ink`, di dark mode mereka jadi **putih menyilaukan** — pita putih full-bleed di halaman gelap itu flashbang. Token terpisah membuatnya jadi *terangkat* (`#1c1c19`), bukan terbalik. Scrim di atas thumbnail justru sebaliknya: dipaku ke `bg-black/15` supaya tidak berubah jadi kabut putih di dark mode.
+- **Toggle tidak menyimpan state React sama sekali.** Kelas di `<html>` adalah satu-satunya sumber kebenaran, di-set sebelum paint pertama oleh script inline, dan kedua ikon selalu dirender dengan CSS yang memutuskan mana yang terlihat. Tidak ada yang perlu di-hydrate, jadi tidak ada yang bisa mismatch — jebakan yang sudah dua kali memakan proyek ini (§12.1, §12.7).
+
+### 12.17 Aset: 9,2MB → 2,5MB
+
+`scripts/optimize-images.mjs` membatasi screenshot di 1600px dan mengubahnya ke WebP, lalu menulis ulang path di file konten. Berat sumber tidak sampai ke pengunjung — `next/image` sudah meng-encode ulang di jalan keluar — tapi 9MB PNG di repo memperlambat setiap clone, build, dan deploy. Jalankan lagi setelah menaruh screenshot baru.
+
+### 12.18 React memiliki `<html className>` — jangan menaruh state imperatif di sana
+
+Ditemukan saat verifikasi, bukan saat menulis kode: setelah mengaktifkan dark mode lalu **mengganti bahasa**, temanya hilang.
+
+Sebabnya halus. Class `dark` ditambahkan secara imperatif oleh script pra-paint, tapi `className` di `<html>` dirender oleh React. Berpindah locale melintasi boundary `[lang]`, jadi root layout re-render — dan React menulis ulang `className` dengan nilai yang ia tahu, yang tidak mengandung `dark`.
+
+Ini varian ketiga dari kesalahan yang sama dengan §12.1 dan §12.7: **mencampur state yang ditulis di luar React dengan atribut yang dikelola React.** Pola bugnya identik, tempatnya saja yang berbeda.
+
+Perbaikannya bukan menambal class-nya kembali, tapi menghindari re-render itu sepenuhnya: language switcher memakai `<a>` biasa, bukan `<Link>`. Ganti bahasa memang perubahan seluruh dokumen — atribut `lang` berubah, setiap string di halaman berubah — jadi soft navigation tidak memberi apa pun di sini dan justru memakan temanya. Full load membuat script pra-paint jalan lagi dan tema pulih.
+
+Terverifikasi di empat skenario: toggle, ganti bahasa, navigasi dalam aplikasi, dan reload.
+
+### 12.19 Status per fase
 
 | Fase | Status |
 |---|---|

@@ -21,11 +21,6 @@ const RING_SIZE: Record<CursorState, number> = {
   view: 76,
 };
 
-const RING_LABEL: Partial<Record<CursorState, string>> = {
-  drag: "↔",
-  view: "View",
-};
-
 /**
  * Custom cursor — PRD §5.5.
  *
@@ -36,7 +31,7 @@ const RING_LABEL: Partial<Record<CursorState, string>> = {
  * Never rendered on coarse pointers or under reduced motion — on touch
  * it would be an invisible element chasing taps.
  */
-export function Cursor() {
+export function Cursor({ viewLabel }: { viewLabel: string }) {
   const hasFinePointer = useHasFinePointer();
   const shouldReduce = usePrefersReducedMotion();
   const enabled = hasFinePointer && !shouldReduce;
@@ -85,7 +80,8 @@ export function Cursor() {
   if (!enabled) return null;
 
   const size = RING_SIZE[state];
-  const label = RING_LABEL[state];
+  const label =
+    state === "drag" ? "↔" : state === "view" ? viewLabel : undefined;
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[100]">
